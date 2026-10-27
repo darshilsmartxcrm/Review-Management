@@ -549,8 +549,8 @@ function ReviewFunnelContent() {
             {rating >= 4 ? (
               <span className="text-amber-400">{ui.starsSelected}</span>
             ) : (
-              <span className="text-emerald-400">
-                ⭐ {rating} Star Rating • {ui.directWhatsAppNotice}
+              <span className="text-amber-400">
+                ⭐ {rating} Star Rating
               </span>
             )}
           </p>
@@ -719,7 +719,7 @@ function ReviewFunnelContent() {
             </div>
           </div>
         ) : (
-          <div className="space-y-3 pt-1 animate-fade-in">
+          <div className="pt-1 animate-fade-in">
             {/* Primary Action Button: Submit Your Review (Redirects to WhatsApp) */}
             <button
               type="button"
@@ -729,21 +729,6 @@ function ReviewFunnelContent() {
               <MessageSquare className="w-5 h-5 text-emerald-200" />
               <span>{ui.submitReviewBtn || 'Submit Your Review'}</span>
             </button>
-
-            {/* Direct WhatsApp Notice Card */}
-            <div className="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 text-center space-y-1 text-xs">
-              <div className="flex items-center justify-center gap-1.5 font-bold text-emerald-400">
-                <MessageSquare className="w-4 h-4 shrink-0" />
-                <span>{ui.directWhatsAppNotice}: {client.name} (+{formatWhatsAppPhone(client.phone, agencyPhone)})</span>
-              </div>
-              <p className="text-[11px] text-slate-400 leading-relaxed">
-                {lang === 'gu'
-                  ? `તમારો ફીડબેક સીધો ${client.name} ના WhatsApp નંબર (+${formatWhatsAppPhone(client.phone, agencyPhone)}) પર સુરક્ષિત રીતે મોકલવામાં આવશે.`
-                  : lang === 'hi'
-                  ? `आपका फीडबैक सीधे ${client.name} के WhatsApp नंबर (+${formatWhatsAppPhone(client.phone, agencyPhone)}) पर सुरक्षित रूप से भेजा जाएगा।`
-                  : `Your feedback will be sent directly to ${client.name}'s WhatsApp (+${formatWhatsAppPhone(client.phone, agencyPhone)}).`}
-              </p>
-            </div>
           </div>
         )}
         </>
