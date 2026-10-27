@@ -18,6 +18,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { Client, LanguageCode, IndustryKey } from '../../lib/types';
+import { useAppSelector } from '../../store/hooks';
 import {
   INDUSTRY_CATALOG,
   UI_STRINGS,
@@ -50,6 +51,7 @@ import {
 
 function ReviewFunnelContent() {
   const searchParams = useSearchParams();
+  const reduxCategories = useAppSelector((state) => state.categories.items);
 
   const [client, setClient] = useState<Client>(() => {
     const nameParam = searchParams.get('name') || searchParams.get('n');
@@ -254,7 +256,16 @@ function ReviewFunnelContent() {
   }, [activeTemplates, selectedProduct, client, lang, rating]);
 
   const ui = UI_STRINGS[lang] || UI_STRINGS.en;
-  const catInfo = client.category ? INDUSTRY_CATALOG[client.category] || INDUSTRY_CATALOG.general : INDUSTRY_CATALOG.general;
+  const catInfo = client.category
+    ? reduxCategories.find(
+        (c) =>
+          c.id === client.category ||
+          c.id.toLowerCase() === (client.category || '').toLowerCase()
+      ) ||
+      INDUSTRY_CATALOG[client.category] ||
+      INDUSTRY_CATALOG[(client.category || '').toLowerCase()] ||
+      INDUSTRY_CATALOG.general
+    : INDUSTRY_CATALOG.general;
 
   // Available product pills: from client's keywords or default catalog products
   const availableProducts = client.keywords

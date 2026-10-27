@@ -9,6 +9,7 @@ const clientRoutes = require('./routes/clientRoutes');
 const leadRoutes = require('./routes/leadRoutes');
 const settingRoutes = require('./routes/settingRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -68,6 +69,7 @@ app.use('/api/clients', clientRoutes);
 app.use('/api/leads', leadRoutes);
 app.use('/api/settings', settingRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // Root route
 app.get('/', (req, res) => {

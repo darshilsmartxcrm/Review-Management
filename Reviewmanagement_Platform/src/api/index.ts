@@ -4,3 +4,4 @@ export * from './clientsApi';
 export * from './leadsApi';
 export * from './settingsApi';
 export * from './reviewsApi';
+export * from './categoriesApi';

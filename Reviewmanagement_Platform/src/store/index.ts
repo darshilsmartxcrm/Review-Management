@@ -4,6 +4,7 @@ import clientsReducer from '../slices/clientsSlice';
 import leadsReducer from '../slices/leadsSlice';
 import settingsReducer from '../slices/settingsSlice';
 import reviewsReducer from '../slices/reviewsSlice';
+import categoriesReducer from '../slices/categoriesSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     leads: leadsReducer,
     settings: settingsReducer,
     reviews: reviewsReducer,
+    categories: categoriesReducer,
   },
   devTools: process.env.NODE_ENV !== 'production',
 });

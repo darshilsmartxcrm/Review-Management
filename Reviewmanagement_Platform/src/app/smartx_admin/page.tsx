@@ -30,7 +30,8 @@ import {
   Clock,
   ShieldCheck,
   ShieldAlert,
-  RefreshCw
+  RefreshCw,
+  Layers
 } from 'lucide-react';
 import { Client, Lead, IndustryKey } from '../../lib/types';
 import {
@@ -63,11 +64,13 @@ import { loginAdmin, logoutAdmin, checkAuthSession } from '../../slices/authSlic
 import { fetchClients, saveClient, deleteClient, setClientsDirect } from '../../slices/clientsSlice';
 import { fetchLeads, addLead, removeLead } from '../../slices/leadsSlice';
 import { fetchSettings } from '../../slices/settingsSlice';
+import { fetchCategories } from '../../slices/categoriesSlice';
 import ClientModal from '../../components/ClientModal';
 import QrCodeModal from '../../components/QrCodeModal';
 import WhatsAppModal from '../../components/WhatsAppModal';
 import ApplyLeadModal from '../../components/ApplyLeadModal';
 import SettingsModal from '../../components/SettingsModal';
+import CategoryMasterModal from '../../components/CategoryMasterModal';
 import Toast from '../../components/Toast';
 
 export default function SmartXCRMAdminPortalPage() {
@@ -75,6 +78,7 @@ export default function SmartXCRMAdminPortalPage() {
   const reduxAuth = useAppSelector((state) => state.auth);
   const reduxClients = useAppSelector((state) => state.clients.items);
   const reduxLeads = useAppSelector((state) => state.leads.items);
+  const reduxCategories = useAppSelector((state) => state.categories.items);
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isAuthChecking, setIsAuthChecking] = useState<boolean>(true);
@@ -97,6 +101,8 @@ export default function SmartXCRMAdminPortalPage() {
   // Modals
   const [isClientModalOpen, setIsClientModalOpen] = useState<boolean>(false);
   const [editingClient, setEditingClient] = useState<Client | null>(null);
+
+  const [isCategoryMasterOpen, setIsCategoryMasterOpen] = useState<boolean>(false);
 
   const [isQrModalOpen, setIsQrModalOpen] = useState<boolean>(false);
   const [selectedQrClient, setSelectedQrClient] = useState<Client | null>(null);
@@ -130,6 +136,7 @@ export default function SmartXCRMAdminPortalPage() {
         dispatch(fetchClients());
         dispatch(fetchLeads());
         dispatch(fetchSettings());
+        dispatch(fetchCategories());
       } else {
         const authed = isUserAuthenticated();
         setIsAuthenticated(authed);
@@ -137,6 +144,7 @@ export default function SmartXCRMAdminPortalPage() {
           dispatch(fetchClients());
           dispatch(fetchLeads());
           dispatch(fetchSettings());
+          dispatch(fetchCategories());
         }
       }
       setIsAuthChecking(false);
@@ -435,6 +443,15 @@ export default function SmartXCRMAdminPortalPage() {
             </button>
 
             <button
+              onClick={() => setIsCategoryMasterOpen(true)}
+              className="p-2.5 sm:px-3 sm:py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition border cursor-pointer bg-slate-800/80 border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800"
+              title="Category Master"
+            >
+              <Layers className="w-4 h-4 text-purple-400" />
+              <span className="hidden md:inline">Category Master</span>
+            </button>
+
+            <button
               onClick={() => {
                 setEditingClient(null);
                 setIsClientModalOpen(true);
@@ -651,11 +668,14 @@ export default function SmartXCRMAdminPortalPage() {
               className="py-2.5 px-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition cursor-pointer"
             >
               <option value="all">All Industries ({clients.length})</option>
-              {Object.values(INDUSTRY_CATALOG).map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.icon} {cat.name}
-                </option>
-              ))}
+              {(reduxCategories.length > 0 ? reduxCategories : Object.values(INDUSTRY_CATALOG)).map((cat) => {
+                const count = clients.filter((c) => c.category === cat.id).length;
+                return (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.icon || '🏷️'} {cat.name} ({count})
+                  </option>
+                );
+              })}
             </select>
           </div>
 
@@ -685,7 +705,15 @@ export default function SmartXCRMAdminPortalPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {filteredClients.map((client) => {
-              const catInfo = INDUSTRY_CATALOG[client.category] || INDUSTRY_CATALOG.general;
+              const catInfo =
+                reduxCategories.find(
+                  (c) =>
+                    c.id === client.category ||
+                    c.id.toLowerCase() === (client.category || '').toLowerCase()
+                ) ||
+                INDUSTRY_CATALOG[client.category] ||
+                INDUSTRY_CATALOG[(client.category || '').toLowerCase()] ||
+                INDUSTRY_CATALOG.general;
               const encoded = encodeClientData(client);
               const keywordsList = client.keywords ? client.keywords.split(',').map((k) => k.trim()).filter(Boolean) : [];
 
@@ -699,12 +727,12 @@ export default function SmartXCRMAdminPortalPage() {
                     {/* Header bar */}
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2">
-                        <span className="text-xl p-2 rounded-xl bg-slate-800 border border-slate-700/60">
-                          {catInfo.icon}
+                        <span className="text-xl p-2 rounded-xl bg-slate-800 border border-slate-700/60 shrink-0">
+                          {catInfo.icon || '🏷️'}
                         </span>
                         <div>
                           <span className="text-[11px] font-bold text-indigo-400 tracking-wider uppercase">
-                            {catInfo.name.split(',')[0]}
+                            {catInfo.name ? catInfo.name.split(',')[0] : (client.category || 'GENERAL')}
                           </span>
                           <span className="text-[10px] text-slate-500 block">
                             {client.default_lang === 'gu' ? '🇮🇳 ગુજરાતી' : client.default_lang === 'hi' ? '🇮🇳 हिन्दी' : '🇬🇧 English'}
@@ -875,6 +903,13 @@ export default function SmartXCRMAdminPortalPage() {
           setEditingClient(null);
         }}
         onSave={handleSaveClient}
+        onOpenCategoryMaster={() => setIsCategoryMasterOpen(true)}
+      />
+
+      <CategoryMasterModal
+        isOpen={isCategoryMasterOpen}
+        onClose={() => setIsCategoryMasterOpen(false)}
+        showToast={showToast}
       />
 
       <QrCodeModal

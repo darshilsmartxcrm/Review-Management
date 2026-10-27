@@ -1,8 +1,26 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { X, Sparkles, Building2, MapPin, Phone, Link2, User, Globe, Calendar, Clock, ShieldCheck, ShieldAlert } from 'lucide-react';
-import { Client, IndustryKey, LanguageCode } from '../lib/types';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  X,
+  Sparkles,
+  Building2,
+  MapPin,
+  Phone,
+  Link2,
+  User,
+  Globe,
+  Calendar,
+  Clock,
+  ShieldCheck,
+  ShieldAlert,
+  ChevronDown,
+  Search,
+  Check,
+  Plus
+} from 'lucide-react';
+import { Client, IndustryKey, LanguageCode, IndustryCategory } from '../lib/types';
+import { useAppSelector } from '../store/hooks';
 import {
   INDUSTRY_CATALOG,
   formatGoogleReviewUrl,
@@ -21,12 +39,16 @@ interface ClientModalProps {
   client: Client | null;
   onClose: () => void;
   onSave: (clientData: Client) => void;
+  onOpenCategoryMaster?: () => void;
 }
 
-export default function ClientModal({ isOpen, client, onClose, onSave }: ClientModalProps) {
+export default function ClientModal({ isOpen, client, onClose, onSave, onOpenCategoryMaster }: ClientModalProps) {
+  const reduxCategories = useAppSelector((state) => state.categories.items);
+  const categoriesList = reduxCategories.length > 0 ? reduxCategories : Object.values(INDUSTRY_CATALOG);
+
   const [name, setName] = useState('');
   const [personName, setPersonName] = useState('');
-  const [category, setCategory] = useState<IndustryKey>('surgical_medical');
+  const [category, setCategory] = useState<string>('surgical_medical');
   const [city, setCity] = useState('');
   const [googleUrl, setGoogleUrl] = useState('');
   const [phone, setPhone] = useState('');
@@ -35,11 +57,29 @@ export default function ClientModal({ isOpen, client, onClose, onSave }: ClientM
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
 
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const [categorySearchQuery, setCategorySearchQuery] = useState('');
+  const categoryDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (categoryDropdownRef.current && !categoryDropdownRef.current.contains(event.target as Node)) {
+        setIsCategoryDropdownOpen(false);
+      }
+    }
+    if (isCategoryDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isCategoryDropdownOpen]);
+
   useEffect(() => {
     if (client) {
       setName(client.name || '');
       setPersonName(client.person_name || '');
-      setCategory(client.category || 'surgical_medical');
+      setCategory(client.category || (categoriesList[0]?.id || 'surgical_medical'));
       setCity(client.city || '');
       setGoogleUrl(client.google_url || '');
       setPhone(client.phone || '');
@@ -50,11 +90,13 @@ export default function ClientModal({ isOpen, client, onClose, onSave }: ClientM
     } else {
       setName('');
       setPersonName('');
-      setCategory('surgical_medical');
+      const defaultCatId = categoriesList[0]?.id || 'surgical_medical';
+      setCategory(defaultCatId);
       setCity('');
       setGoogleUrl('');
       setPhone('');
-      const defaultProds = INDUSTRY_CATALOG.surgical_medical?.defaultProducts.slice(0, 5).join(', ') || '';
+      const defaultCat = categoriesList.find((c) => c.id === defaultCatId) || INDUSTRY_CATALOG.surgical_medical;
+      const defaultProds = defaultCat?.defaultProducts.slice(0, 5).join(', ') || '';
       setKeywords(defaultProds);
       setDefaultLang('gu');
       setStartDate(getTodayDateString());
@@ -64,11 +106,24 @@ export default function ClientModal({ isOpen, client, onClose, onSave }: ClientM
 
   if (!isOpen) return null;
 
-  const currentCategoryInfo = INDUSTRY_CATALOG[category] || INDUSTRY_CATALOG.general;
+  const currentCategoryInfo =
+    categoriesList.find((c) => c.id === category) ||
+    INDUSTRY_CATALOG[category] ||
+    INDUSTRY_CATALOG.general;
 
-  const handleCategoryChange = (newCat: IndustryKey) => {
+  const filteredCategoryOptions = categoriesList.filter((cat) => {
+    const q = categorySearchQuery.toLowerCase().trim();
+    if (!q) return true;
+    return (
+      cat.name.toLowerCase().includes(q) ||
+      cat.id.toLowerCase().includes(q) ||
+      cat.defaultProducts?.some((p) => p.toLowerCase().includes(q))
+    );
+  });
+
+  const handleCategoryChange = (newCat: string) => {
     setCategory(newCat);
-    const catInfo = INDUSTRY_CATALOG[newCat];
+    const catInfo = categoriesList.find((c) => c.id === newCat) || INDUSTRY_CATALOG[newCat];
     if (catInfo && (!keywords || keywords.trim() === '')) {
       setKeywords(catInfo.defaultProducts.slice(0, 6).join(', '));
     }
@@ -187,21 +242,128 @@ export default function ClientModal({ isOpen, client, onClose, onSave }: ClientM
 
           {/* Category & City */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Industry Category <span className="text-rose-400">*</span>
-              </label>
-              <select
-                value={category}
-                onChange={(e) => handleCategoryChange(e.target.value as IndustryKey)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition cursor-pointer"
+            {/* Searchable Category Selector */}
+            <div className="relative" ref={categoryDropdownRef}>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                  Industry Category <span className="text-rose-400">*</span>
+                </label>
+                {onOpenCategoryMaster && (
+                  <button
+                    type="button"
+                    onClick={onOpenCategoryMaster}
+                    className="text-[11px] font-semibold text-indigo-400 hover:text-indigo-300 underline cursor-pointer"
+                  >
+                    + Manage Master
+                  </button>
+                )}
+              </div>
+
+              {/* Trigger Button showing current selection */}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsCategoryDropdownOpen(!isCategoryDropdownOpen);
+                  setCategorySearchQuery('');
+                }}
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 hover:border-slate-600 text-sm text-white flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-indigo-500 transition cursor-pointer text-left"
               >
-                {Object.values(INDUSTRY_CATALOG).map((cat) => (
-                  <option key={cat.id} value={cat.id} className="bg-slate-900 text-white">
-                    {cat.icon} {cat.name}
-                  </option>
-                ))}
-              </select>
+                <div className="flex items-center gap-2 truncate">
+                  <span className="text-lg shrink-0">{currentCategoryInfo?.icon || '🏷️'}</span>
+                  <span className="font-medium truncate">{currentCategoryInfo?.name || 'Select Category'}</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-slate-400 shrink-0 ml-2">
+                  <Search className="w-3.5 h-3.5 text-slate-500" />
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isCategoryDropdownOpen ? 'rotate-180 text-indigo-400' : ''}`} />
+                </div>
+              </button>
+
+              {/* Searchable Dropdown Popup */}
+              {isCategoryDropdownOpen && (
+                <div className="absolute left-0 right-0 top-full mt-2 z-50 rounded-2xl bg-slate-900 border border-slate-700 shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+                  {/* Search input box */}
+                  <div className="p-2.5 bg-slate-950 border-b border-slate-800 relative">
+                    <Search className="absolute left-5 top-5 w-4 h-4 text-slate-500 pointer-events-none" />
+                    <input
+                      type="text"
+                      autoFocus
+                      value={categorySearchQuery}
+                      onChange={(e) => setCategorySearchQuery(e.target.value)}
+                      placeholder="Search category or keywords..."
+                      className="w-full pl-9 pr-8 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                    {categorySearchQuery && (
+                      <button
+                        type="button"
+                        onClick={() => setCategorySearchQuery('')}
+                        className="absolute right-4 top-4 text-slate-400 hover:text-white text-xs p-1 cursor-pointer"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* List of categories */}
+                  <div className="max-h-60 overflow-y-auto p-1.5 space-y-1">
+                    {filteredCategoryOptions.map((cat) => {
+                      const isSelected = cat.id === category;
+                      return (
+                        <button
+                          key={cat.id}
+                          type="button"
+                          onClick={() => {
+                            handleCategoryChange(cat.id);
+                            setIsCategoryDropdownOpen(false);
+                            setCategorySearchQuery('');
+                          }}
+                          className={`w-full p-2.5 rounded-xl text-left flex items-center justify-between transition cursor-pointer ${
+                            isSelected
+                              ? 'bg-indigo-600/20 border border-indigo-500/40 text-white'
+                              : 'hover:bg-slate-800/80 text-slate-300 hover:text-white'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <span className="text-xl shrink-0 p-1 rounded-lg bg-slate-950/60 border border-slate-800">
+                              {cat.icon || '🏷️'}
+                            </span>
+                            <div className="truncate">
+                              <span className="font-semibold text-xs block text-white truncate">
+                                {cat.name}
+                              </span>
+                              <span className="text-[10px] text-slate-500 font-mono block">
+                                ID: {cat.id}
+                              </span>
+                            </div>
+                          </div>
+
+                          {isSelected && (
+                            <Check className="w-4 h-4 text-indigo-400 shrink-0 ml-2" />
+                          )}
+                        </button>
+                      );
+                    })}
+
+                    {filteredCategoryOptions.length === 0 && (
+                      <div className="p-4 text-center text-xs text-slate-400">
+                        <p className="mb-2">No category found matching &quot;{categorySearchQuery}&quot;</p>
+                        {onOpenCategoryMaster && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setIsCategoryDropdownOpen(false);
+                              onOpenCategoryMaster();
+                            }}
+                            className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold transition inline-flex items-center gap-1 cursor-pointer"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                            <span>Add &quot;{categorySearchQuery}&quot; to Master</span>
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div>

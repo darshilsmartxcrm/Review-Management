@@ -13,10 +13,11 @@ export type IndustryKey =
   | 'education'
   | 'furniture'
   | 'legal_finance'
-  | 'general';
+  | 'general'
+  | string;
 
 export interface IndustryCategory {
-  id: IndustryKey;
+  id: string;
   name: string;
   icon: string;
   categoryPhrase: {
@@ -25,13 +26,16 @@ export interface IndustryCategory {
     gu: string;
   };
   defaultProducts: string[];
+  isSystem?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Client {
   id: string;
   name: string;
   person_name?: string;
-  category: IndustryKey;
+  category: string;
   city: string;
   google_url: string;
   phone: string;

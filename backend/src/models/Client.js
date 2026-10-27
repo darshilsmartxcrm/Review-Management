@@ -22,21 +22,7 @@ const clientSchema = new mongoose.Schema(
     category: {
       type: String,
       required: [true, 'Category is required'],
-      enum: [
-        'surgical_medical',
-        'healthcare',
-        'restaurant',
-        'salon',
-        'automobile',
-        'electronics',
-        'realestate',
-        'fashion',
-        'fitness',
-        'education',
-        'furniture',
-        'legal_finance',
-        'general',
-      ],
+      trim: true,
       default: 'surgical_medical',
     },
     city: {
