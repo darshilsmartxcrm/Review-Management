@@ -1271,7 +1271,7 @@ export const DEFAULT_CLIENTS: Client[] = [
     google_url: 'https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4',
     phone: '919876543210',
     keywords: 'Hospital Bed, Mobility Solutions, Oxygen Concentrator, Walker, Walker / Walking Stick',
-    default_lang: 'gu',
+    default_lang: 'en',
     createdAt: new Date().toISOString(),
     start_date: '2026-10-01',
     expiry_date: '2027-10-26'
@@ -1285,7 +1285,7 @@ export const DEFAULT_CLIENTS: Client[] = [
     google_url: 'https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4',
     phone: '919876543211',
     keywords: 'Emergency Care, Orthopedic Surgery, ICU Facility, Cashless Mediclaim',
-    default_lang: 'gu',
+    default_lang: 'en',
     createdAt: new Date().toISOString(),
     start_date: '2026-10-15',
     expiry_date: '2027-04-26'
@@ -1299,7 +1299,7 @@ export const DEFAULT_CLIENTS: Client[] = [
     google_url: 'https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4',
     phone: '919876543212',
     keywords: 'Painless Root Canal, Teeth Cleaning, Dental Implants, Invisible Aligners',
-    default_lang: 'hi',
+    default_lang: 'en',
     createdAt: new Date().toISOString(),
     start_date: '2026-10-20',
     expiry_date: '2027-01-26'
@@ -1313,7 +1313,7 @@ export const DEFAULT_CLIENTS: Client[] = [
     google_url: 'https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4',
     phone: '919876543213',
     keywords: 'Authentic Gujarati Thali, Family Dining, Fast Service, Delicious Desserts',
-    default_lang: 'gu',
+    default_lang: 'en',
     createdAt: new Date().toISOString(),
     start_date: '2026-10-01',
     expiry_date: '2027-06-26'
@@ -1327,7 +1327,7 @@ export const DEFAULT_CLIENTS: Client[] = [
     google_url: 'https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4',
     phone: '919876543214',
     keywords: 'Panchakarma Therapy, Joint Pain Relief, Herbal Medicine, Stress Relief',
-    default_lang: 'gu',
+    default_lang: 'en',
     createdAt: new Date().toISOString(),
     start_date: '2026-05-01',
     expiry_date: '2026-09-15'

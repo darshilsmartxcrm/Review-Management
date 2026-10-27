@@ -76,7 +76,7 @@ function ReviewFunnelContent() {
         category: (catParam as IndustryKey) || 'healthcare',
         person_name: pnParam ? pnParam.trim() : undefined,
         google_url: gParam ? gParam.trim() : DEFAULT_CLIENTS[0].google_url,
-        default_lang: (langParam as LanguageCode) || 'gu',
+        default_lang: (langParam as LanguageCode) || 'en',
         keywords: kParam ? kParam.trim() : '',
         start_date: sdParam || undefined,
         expiry_date: edParam || undefined,
@@ -97,7 +97,7 @@ function ReviewFunnelContent() {
   const [lang, setLang] = useState<LanguageCode>(() => {
     const langParam = (searchParams.get('lang') || searchParams.get('l')) as LanguageCode;
     if (langParam === 'en' || langParam === 'hi' || langParam === 'gu') return langParam;
-    return client?.default_lang || 'gu';
+    return client?.default_lang || 'en';
   });
   const [rating, setRating] = useState<number>(5);
   const [hoverRating, setHoverRating] = useState<number>(0);
@@ -152,7 +152,7 @@ function ReviewFunnelContent() {
         category: (catParam as IndustryKey) || 'healthcare',
         person_name: pnParam ? pnParam.trim() : undefined,
         google_url: gParam ? gParam.trim() : DEFAULT_CLIENTS[0].google_url,
-        default_lang: (langParam as LanguageCode) || 'gu',
+        default_lang: (langParam as LanguageCode) || 'en',
         keywords: kParam ? kParam.trim() : '',
         start_date: sdParam || undefined,
         expiry_date: edParam || undefined,
@@ -169,8 +169,10 @@ function ReviewFunnelContent() {
     }
 
     setClient(initialClient);
-    if (initialClient.default_lang) {
-      setLang(initialClient.default_lang);
+    if (langParam === 'en' || langParam === 'hi' || langParam === 'gu') {
+      setLang(langParam as LanguageCode);
+    } else {
+      setLang(initialClient.default_lang || 'en');
     }
 
     // Live sync with /api/clients for keywords, google_url, locks, and dates
@@ -561,9 +563,9 @@ function ReviewFunnelContent() {
           </label>
 
           <div className="grid grid-cols-3 gap-2">
-            {(['gu', 'hi', 'en'] as LanguageCode[]).map((code) => {
+            {(['en', 'hi', 'gu'] as LanguageCode[]).map((code) => {
               const isSelected = lang === code;
-              const label = code === 'gu' ? '🇮🇳 ગુજરાતી' : code === 'hi' ? '🇮🇳 हिन्दी' : '🇬🇧 English';
+              const label = code === 'en' ? '🇬🇧 English' : code === 'hi' ? '🇮🇳 हिन्दी' : '🇮🇳 ગુજરાતી';
               return (
                 <button
                   type="button"

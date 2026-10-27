@@ -145,7 +145,7 @@ const createClient = async (req, res, next) => {
         google_url: google_url.trim(),
         phone: phone.trim(),
         keywords: keywords ? keywords.trim() : '',
-        default_lang: default_lang || 'gu',
+        default_lang: default_lang || 'en',
         start_date: start_date || new Date().toISOString().split('T')[0],
         expiry_date: expiry_date,
       },

@@ -1,11 +1,27 @@
 [
   {
+    "_id": "6ae05fd64734a883c5b08950",
+    "id": "client_1793089490454",
+    "category": "skin_clinic",
+    "city": "Surat",
+    "createdAt": "2026-10-27T08:24:54.205Z",
+    "default_lang": "en",
+    "expiry_date": "2028-07-27",
+    "google_url": "https://g.page/r/CdnVdiT_7QFzEBM/review",
+    "keywords": "Medical Botox, Dermal Fillers, Facial Laser Treatments, Chemical Peels, Acne Treatment, Acne Scar Treatment, Pigmentation Treatment, Melasma Treatment, Skin Rejuvenation, Anti-Aging Treatments, Medi-Facials, Skin Brightening, Skin Tightening, Hair Fall Treatment, PRP Hair Treatment, Microneedling, Hydrafacial, Lip Enhancement, Under-Eye Treatment, Fine Lines and Wrinkle Treatment, Skin Consultation.",
+    "name": "Sculpt Skin Care Clinic",
+    "person_name": "Dr. Kinjal Pathak",
+    "phone": "917575096668",
+    "start_date": "2026-10-27",
+    "updatedAt": "2026-10-27T08:25:31.136Z"
+  },
+  {
     "_id": "6ae041b84734a883c5b01424",
     "id": "client_1793081779964",
     "category": "ortho",
     "city": "Surat",
     "createdAt": "2026-10-27T06:16:23.967Z",
-    "default_lang": "gu",
+    "default_lang": "en",
     "expiry_date": "2028-01-27",
     "google_url": "https://g.page/r/CYkWsDUTS2rZEBM/review",
     "keywords": "Orthopaedic Consultation, Knee Replacement Surgery, Hip Replacement Surgery, Joint Replacement Surgery, Total Knee Replacement, Partial Knee Replacement, Revision Knee Replacement, Revision Hip Replacement, Arthroscopy Surgery, Knee Arthroscopy, Shoulder Arthroscopy, Sports Injury Treatment, ACL Reconstruction Surgery, PCL Reconstruction Surgery, Meniscus Tear Treatment, Ligament Injury Treatment, Shoulder Injury Treatment, Rotator Cuff Treatment, Fracture Treatment, Trauma Care, Bone Fracture Management, Dislocation Treatment, Arthritis Treatment, Osteoarthritis Treatment, Rheumatoid Arthritis Consultation, Knee Pain Treatment, Hip Pain Treatment, Shoulder Pain Treatment, Back Pain Consultation, Joint Pain Treatment, Sports Medicine Consultation, Orthopaedic Emergency Care, Postoperative Rehabilitation Guidance, Joint Replacement Follow-up, Orthopaedic Second Opinion, Bone and Joint Disorders Treatment",
@@ -24,7 +40,7 @@
     "google_url": "https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4",
     "phone": "919876543210",
     "keywords": "Hospital Bed, Mobility Solutions, Oxygen Concentrator, Walker, Walker / Walking Stick",
-    "default_lang": "gu",
+    "default_lang": "en",
     "createdAt": "2026-10-27T04:38:49.027Z",
     "start_date": "2026-10-01",
     "expiry_date": "2027-10-26"
@@ -38,7 +54,7 @@
     "google_url": "https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4",
     "phone": "919876543211",
     "keywords": "Emergency Care, Orthopedic Surgery, ICU Facility, Cashless Mediclaim",
-    "default_lang": "gu",
+    "default_lang": "en",
     "createdAt": "2026-10-27T04:38:49.027Z",
     "start_date": "2026-10-15",
     "expiry_date": "2027-04-26"
@@ -52,7 +68,7 @@
     "google_url": "https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4",
     "phone": "919876543212",
     "keywords": "Painless Root Canal, Teeth Cleaning, Dental Implants, Invisible Aligners",
-    "default_lang": "hi",
+    "default_lang": "en",
     "createdAt": "2026-10-27T04:38:49.027Z",
     "start_date": "2026-10-20",
     "expiry_date": "2027-01-26"
@@ -66,7 +82,7 @@
     "google_url": "https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4",
     "phone": "919876543213",
     "keywords": "Authentic Gujarati Thali, Family Dining, Fast Service, Delicious Desserts",
-    "default_lang": "gu",
+    "default_lang": "en",
     "createdAt": "2026-10-27T04:38:49.027Z",
     "start_date": "2026-10-01",
     "expiry_date": "2027-06-26"
@@ -80,7 +96,7 @@
     "google_url": "https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4",
     "phone": "919876543214",
     "keywords": "Panchakarma Therapy, Joint Pain Relief, Herbal Medicine, Stress Relief",
-    "default_lang": "gu",
+    "default_lang": "en",
     "createdAt": "2026-10-27T04:38:49.027Z",
     "start_date": "2026-05-01",
     "expiry_date": "2026-09-15"

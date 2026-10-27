@@ -48,7 +48,7 @@ const clientSchema = new mongoose.Schema(
     default_lang: {
       type: String,
       enum: ['en', 'hi', 'gu'],
-      default: 'gu',
+      default: 'en',
     },
     start_date: {
       type: String, // Format: YYYY-MM-DD

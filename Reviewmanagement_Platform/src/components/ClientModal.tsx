@@ -53,7 +53,7 @@ export default function ClientModal({ isOpen, client, onClose, onSave, onOpenCat
   const [googleUrl, setGoogleUrl] = useState('');
   const [phone, setPhone] = useState('');
   const [keywords, setKeywords] = useState('');
-  const [defaultLang, setDefaultLang] = useState<LanguageCode>('gu');
+  const [defaultLang, setDefaultLang] = useState<LanguageCode>('en');
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
 
@@ -84,7 +84,7 @@ export default function ClientModal({ isOpen, client, onClose, onSave, onOpenCat
       setGoogleUrl(client.google_url || '');
       setPhone(client.phone || '');
       setKeywords(client.keywords || '');
-      setDefaultLang(client.default_lang || 'gu');
+      setDefaultLang(client.default_lang || 'en');
       setStartDate(client.start_date || (client.createdAt ? client.createdAt.split('T')[0] : getTodayDateString()));
       setEndDate(client.expiry_date || getDefaultExpiryDate(3));
     } else {
@@ -440,9 +440,9 @@ export default function ClientModal({ isOpen, client, onClose, onSave, onOpenCat
                   onChange={(e) => setDefaultLang(e.target.value as LanguageCode)}
                   className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition cursor-pointer"
                 >
-                  <option value="gu" className="bg-slate-900 text-white">🇮🇳 ગુજરાતી (Gujarati)</option>
-                  <option value="hi" className="bg-slate-900 text-white">🇮🇳 हिन्दी (Hindi)</option>
                   <option value="en" className="bg-slate-900 text-white">🇬🇧 English</option>
+                  <option value="hi" className="bg-slate-900 text-white">🇮🇳 हिन्दी (Hindi)</option>
+                  <option value="gu" className="bg-slate-900 text-white">🇮🇳 ગુજરાતી (Gujarati)</option>
                 </select>
               </div>
             </div>
