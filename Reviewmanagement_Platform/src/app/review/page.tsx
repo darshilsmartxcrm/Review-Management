@@ -15,7 +15,8 @@ import {
   Rocket,
   CalendarX,
   Clock,
-  MessageSquare
+  MessageSquare,
+  Loader2
 } from 'lucide-react';
 import { Client, LanguageCode, IndustryKey } from '../../lib/types';
 import { useAppSelector } from '../../store/hooks';
@@ -114,6 +115,7 @@ function ReviewFunnelContent() {
   const [showRedirectModal, setShowRedirectModal] = useState<boolean>(false);
   const [copiedToast, setCopiedToast] = useState<boolean>(false);
   const [isApplyModalOpen, setIsApplyModalOpen] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   // Initialize client from query param ?id=... or ?d=... or fallback to stored clients
   useEffect(() => {
@@ -318,6 +320,7 @@ function ReviewFunnelContent() {
   };
 
   const handleCopyAndRedirect = () => {
+    if (isSubmitting) return;
     const textToSubmit = selectedReviewText.trim() || generatedOptions[0] || '';
     if (!textToSubmit) return;
 
@@ -330,21 +333,6 @@ function ReviewFunnelContent() {
 
     // Copy to clipboard with universal mobile fallback
     copyToClipboardSafe(textToSubmit);
-    setCopiedToast(true);
-    setShowRedirectModal(true);
-
-    const targetUrl = formatGoogleReviewUrl(client.google_url);
-
-    // Open Google immediately on direct user tap (avoids iOS Safari and Chrome mobile popup blockers)
-    try {
-      window.open(targetUrl, '_blank');
-    } catch (e) {
-      console.warn('Window open notice:', e);
-    }
-
-    setTimeout(() => {
-      setCopiedToast(false);
-    }, 4000);
 
     // Lock review for 24 hours across all devices
     if (client?.id) {
@@ -355,9 +343,34 @@ function ReviewFunnelContent() {
     // After user clicks review, shuffle to fresh variations for next time
     const freshTemplates = pickReviewTemplates(lang, client, selectedProduct, [...usedReviews, textToSubmit]);
     setActiveTemplates(freshTemplates);
+
+    // Show 2-second waiting reload
+    setIsSubmitting(true);
+
+    const targetUrl = formatGoogleReviewUrl(client.google_url);
+
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setShowRedirectModal(true);
+      setCopiedToast(true);
+
+      setTimeout(() => {
+        setCopiedToast(false);
+      }, 4000);
+
+      try {
+        const opened = window.open(targetUrl, '_blank');
+        if (!opened || opened.closed || typeof opened.closed === 'undefined') {
+          window.location.href = targetUrl;
+        }
+      } catch (e) {
+        window.location.href = targetUrl;
+      }
+    }, 2000);
   };
 
   const handleSendToWhatsApp = () => {
+    if (isSubmitting) return;
     const targetPhone = formatWhatsAppPhone(client?.phone, agencyPhone);
     const textToSubmit = selectedReviewText.trim() || generatedOptions[0] || 'Feedback submitted';
     const starIcons = '⭐'.repeat(rating);
@@ -365,8 +378,6 @@ function ReviewFunnelContent() {
     const whatsappMsg = rating >= 4
       ? `⭐ *CUSTOMER REVIEW & FEEDBACK - ${client.name.toUpperCase()}*\n\n⭐ *Rating Given:* ${rating} / 5 Stars (${starIcons})\n📍 *City:* ${client.city}\n🏷️ *Service:* ${selectedProduct || 'General'}\n\n📝 *Review / Feedback:*\n"${textToSubmit}"\n\n--------------------------------------------\n_Sent directly on WhatsApp via Review Growth Hub_`
       : `⚠️ *PRIVATE CUSTOMER FEEDBACK & ALERT - ${client.name.toUpperCase()}*\n\n⭐ *Rating Given:* ${rating} / 5 Stars (${starIcons})\n📍 *City:* ${client.city}\n🏷️ *Service:* ${selectedProduct || 'General'}\n\n📝 *Customer Issue / Concern:*\n"${textToSubmit}"\n\n--------------------------------------------\n_Private feedback sent directly to owner. Not posted on Google._`;
-
-    window.open(`https://wa.me/${targetPhone}?text=${encodeURIComponent(whatsappMsg)}`, '_blank');
 
     // Lock review for 24 hours across all devices
     if (client?.id && textToSubmit) {
@@ -382,6 +393,23 @@ function ReviewFunnelContent() {
       const freshTemplates = pickReviewTemplates(lang, client, selectedProduct, [...usedReviews, textToSubmit]);
       setActiveTemplates(freshTemplates);
     }
+
+    // Show 2-second waiting reload
+    setIsSubmitting(true);
+
+    const whatsappUrl = `https://wa.me/${targetPhone}?text=${encodeURIComponent(whatsappMsg)}`;
+
+    setTimeout(() => {
+      setIsSubmitting(false);
+      try {
+        const opened = window.open(whatsappUrl, '_blank');
+        if (!opened || opened.closed || typeof opened.closed === 'undefined') {
+          window.location.href = whatsappUrl;
+        }
+      } catch (e) {
+        window.location.href = whatsappUrl;
+      }
+    }, 2000);
   };
 
   return (
@@ -691,12 +719,30 @@ function ReviewFunnelContent() {
             {/* Primary Action Button: Submit Your Review (Redirects to Google) */}
             <button
               type="button"
+              disabled={isSubmitting}
               onClick={handleCopyAndRedirect}
-              className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-indigo-600 to-blue-600 hover:from-amber-600 hover:via-indigo-700 hover:to-blue-700 active:scale-95 text-white font-black text-sm sm:text-base shadow-xl shadow-indigo-500/30 transition-all flex items-center justify-center gap-2.5 cursor-pointer animate-pulse-subtle"
+              className={`w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-indigo-600 to-blue-600 hover:from-amber-600 hover:via-indigo-700 hover:to-blue-700 active:scale-95 text-white font-black text-sm sm:text-base shadow-xl shadow-indigo-500/30 transition-all flex items-center justify-center gap-2.5 cursor-pointer ${
+                isSubmitting ? 'opacity-85 cursor-wait' : 'animate-pulse-subtle'
+              }`}
             >
-              <CheckCircle2 className="w-5 h-5 text-amber-300" />
-              <span>{ui.submitReviewBtn || 'Submit Your Review'}</span>
-              <ExternalLink className="w-4 h-4 opacity-80" />
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin text-white" />
+                  <span>
+                    {lang === 'gu'
+                      ? 'સબમિટ થઈ રહ્યું છે... રાહ જુઓ...'
+                      : lang === 'hi'
+                      ? 'सबमिट हो रहा है... कृपया प्रतीक्षा करें...'
+                      : 'Submitting Review... Please wait...'}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 className="w-5 h-5 text-amber-300" />
+                  <span>{ui.submitReviewBtn || 'Submit Your Review'}</span>
+                  <ExternalLink className="w-4 h-4 opacity-80" />
+                </>
+              )}
             </button>
 
             {/* 3 Step Quick Instructions Box */}
@@ -723,11 +769,29 @@ function ReviewFunnelContent() {
             {/* Primary Action Button: Submit Your Review (Redirects to WhatsApp) */}
             <button
               type="button"
+              disabled={isSubmitting}
               onClick={handleSendToWhatsApp}
-              className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-700 active:scale-95 text-white font-black text-sm sm:text-base shadow-xl shadow-emerald-600/30 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+              className={`w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-700 active:scale-95 text-white font-black text-sm sm:text-base shadow-xl shadow-emerald-600/30 transition-all flex items-center justify-center gap-2.5 cursor-pointer ${
+                isSubmitting ? 'opacity-85 cursor-wait' : ''
+              }`}
             >
-              <MessageSquare className="w-5 h-5 text-emerald-200" />
-              <span>{ui.submitReviewBtn || 'Submit Your Review'}</span>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin text-white" />
+                  <span>
+                    {lang === 'gu'
+                      ? 'સબમિટ થઈ રહ્યું છે... રાહ જુઓ...'
+                      : lang === 'hi'
+                      ? 'सबमिट हो रहा है... कृपया प्रतीक्षा करें...'
+                      : 'Submitting Feedback... Please wait...'}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <MessageSquare className="w-5 h-5 text-emerald-200" />
+                  <span>{ui.submitReviewBtn || 'Submit Your Review'}</span>
+                </>
+              )}
             </button>
           </div>
         )}
@@ -760,6 +824,62 @@ function ReviewFunnelContent() {
           </a>
         </div>
       </div>
+
+      {/* 2-Second Waiting / Reload Screen Overlay */}
+      {isSubmitting && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in">
+          <style>{`
+            @keyframes waitProgressBar {
+              0% { width: 0%; }
+              100% { width: 100%; }
+            }
+          `}</style>
+          <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl p-6 sm:p-7 text-slate-100 text-center space-y-5">
+            <div className="relative w-16 h-16 mx-auto flex items-center justify-center">
+              <div className="absolute inset-0 rounded-full border-4 border-indigo-500/20 border-t-indigo-500 animate-spin" />
+              <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
+            </div>
+
+            <div className="space-y-1.5">
+              <h3 className="text-lg font-bold text-white">
+                {lang === 'gu'
+                  ? 'રિવ્યૂ સબમિટ થઈ રહ્યો છે...'
+                  : lang === 'hi'
+                  ? 'रिव्यू सबमिट हो रहा है...'
+                  : 'Submitting Your Review...'}
+              </h3>
+              <p className="text-xs text-slate-300">
+                {lang === 'gu'
+                  ? (rating >= 4
+                      ? 'તમારો રિવ્યૂ તૈયાર થઈ રહ્યો છે... ગૂગલ પેજ પર લઈ જઈ રહ્યા છીએ...'
+                      : 'તમારા ફીડબેક સાથે WhatsApp પર જોડાઈ રહ્યા છીએ...')
+                  : lang === 'hi'
+                  ? (rating >= 4
+                      ? 'आपका रिव्यू तैयार हो रहा है... गूगल पेज पर ले जा रहे हैं...'
+                      : 'आपकी प्रतिक्रिया के साथ व्हाट्सएप पर कनेक्ट हो रहे हैं...')
+                  : (rating >= 4
+                      ? 'Preparing your review... Redirecting to Google...'
+                      : 'Connecting to WhatsApp with your feedback...')}
+              </p>
+              <p className="text-[11px] text-indigo-400 font-semibold animate-pulse pt-1">
+                {lang === 'gu'
+                  ? 'કૃપા કરીને ૨ સેકન્ડ રાહ જુઓ...'
+                  : lang === 'hi'
+                  ? 'कृपया २ सेकंड प्रतीक्षा करें...'
+                  : 'Please wait 2 seconds... Redirecting...'}
+              </p>
+            </div>
+
+            {/* 2-Second Animated Progress Bar */}
+            <div className="w-full bg-slate-800/80 rounded-full h-2 overflow-hidden border border-slate-700/50">
+              <div
+                className="bg-gradient-to-r from-amber-400 via-indigo-500 to-emerald-400 h-2 rounded-full"
+                style={{ animation: 'waitProgressBar 2s linear forwards' }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Redirect Instruction Modal */}
       {showRedirectModal && (

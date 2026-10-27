@@ -1,5 +1,17 @@
 [
   {
+    "clientId": "client_1793089490454",
+    "reviewText": "Top-notch quality Medical Botox and very genuine pricing at Sculpt Skin Care Clinic. Great value for money and polite behavior throughout.",
+    "normalized": "topnotchqualitymedicalbotoxandverygenuinepricingatsculptskincareclinicgreatvalueformoneyandpolitebehaviorthroughout",
+    "timestamp": 1793092911806
+  },
+  {
+    "clientId": "client_1793089490454",
+    "reviewText": "Excellent customer service and genuine Medical Botox at Sculpt Skin Care Clinic. Great value for money and polite behavior throughout.",
+    "normalized": "excellentcustomerserviceandgenuinemedicalbotoxatsculptskincareclinicgreatvalueformoneyandpolitebehaviorthroughout",
+    "timestamp": 1793092890797
+  },
+  {
     "clientId": "client_2",
     "reviewText": "Emergency Care ના બુકિંગથી લઈને ડિલિવરી સુધી દરેક પગલે એમનો ફોલો-અપ અદ્ભુત રહ્યો. કોઈ રકઝક વગર વાજબી ભાવ અને પ્રથમ વર્ગની સર્વિસ! કોઈ પ્રશ્નનો જવાબ આપવામાં એમણે ક્યારેય અણગમો ન દાખવ્યો. ખૂબ જ સંતોષકારક અનુભવ!",
     "normalized": "emergencycareનબકગથલઈનડલવરસધદરકપગલએમનફલઅપઅદભતરહયકઈરકઝકવગરવજબભવઅનપરથમવરગનસરવસકઈપરશનનજવબઆપવમએમણકયરયઅણગમનદખવયખબજસતષકરકઅનભવ",
