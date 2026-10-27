@@ -318,7 +318,8 @@ function ReviewFunnelContent() {
   };
 
   const handleCopyAndRedirect = () => {
-    if (!selectedReviewText) return;
+    const textToSubmit = selectedReviewText.trim() || generatedOptions[0] || '';
+    if (!textToSubmit) return;
 
     // Trigger celebratory confetti
     confetti({
@@ -328,7 +329,7 @@ function ReviewFunnelContent() {
     });
 
     // Copy to clipboard with universal mobile fallback
-    copyToClipboardSafe(selectedReviewText);
+    copyToClipboardSafe(textToSubmit);
     setCopiedToast(true);
     setShowRedirectModal(true);
 
@@ -347,30 +348,30 @@ function ReviewFunnelContent() {
 
     // Lock review for 24 hours across all devices
     if (client?.id) {
-      markReviewUsed(client.id, selectedReviewText);
-      setUsedReviews((prev) => [...prev, selectedReviewText]);
+      markReviewUsed(client.id, textToSubmit);
+      setUsedReviews((prev) => [...prev, textToSubmit]);
     }
 
     // After user clicks review, shuffle to fresh variations for next time
-    const freshTemplates = pickReviewTemplates(lang, client, selectedProduct, [...usedReviews, selectedReviewText]);
+    const freshTemplates = pickReviewTemplates(lang, client, selectedProduct, [...usedReviews, textToSubmit]);
     setActiveTemplates(freshTemplates);
   };
 
   const handleSendToWhatsApp = () => {
     const targetPhone = formatWhatsAppPhone(client?.phone, agencyPhone);
-    const cleanNote = selectedReviewText.trim() || 'No custom note provided';
+    const textToSubmit = selectedReviewText.trim() || generatedOptions[0] || 'Feedback submitted';
     const starIcons = '⭐'.repeat(rating);
 
     const whatsappMsg = rating >= 4
-      ? `⭐ *CUSTOMER REVIEW & FEEDBACK - ${client.name.toUpperCase()}*\n\n⭐ *Rating Given:* ${rating} / 5 Stars (${starIcons})\n📍 *City:* ${client.city}\n🏷️ *Service:* ${selectedProduct || 'General'}\n\n📝 *Review / Feedback:*\n"${cleanNote}"\n\n--------------------------------------------\n_Sent directly on WhatsApp via Review Growth Hub_`
-      : `⚠️ *PRIVATE CUSTOMER FEEDBACK & ALERT - ${client.name.toUpperCase()}*\n\n⭐ *Rating Given:* ${rating} / 5 Stars (${starIcons})\n📍 *City:* ${client.city}\n🏷️ *Service:* ${selectedProduct || 'General'}\n\n📝 *Customer Issue / Concern:*\n"${cleanNote}"\n\n--------------------------------------------\n_Private feedback sent directly to owner. Not posted on Google._`;
+      ? `⭐ *CUSTOMER REVIEW & FEEDBACK - ${client.name.toUpperCase()}*\n\n⭐ *Rating Given:* ${rating} / 5 Stars (${starIcons})\n📍 *City:* ${client.city}\n🏷️ *Service:* ${selectedProduct || 'General'}\n\n📝 *Review / Feedback:*\n"${textToSubmit}"\n\n--------------------------------------------\n_Sent directly on WhatsApp via Review Growth Hub_`
+      : `⚠️ *PRIVATE CUSTOMER FEEDBACK & ALERT - ${client.name.toUpperCase()}*\n\n⭐ *Rating Given:* ${rating} / 5 Stars (${starIcons})\n📍 *City:* ${client.city}\n🏷️ *Service:* ${selectedProduct || 'General'}\n\n📝 *Customer Issue / Concern:*\n"${textToSubmit}"\n\n--------------------------------------------\n_Private feedback sent directly to owner. Not posted on Google._`;
 
     window.open(`https://wa.me/${targetPhone}?text=${encodeURIComponent(whatsappMsg)}`, '_blank');
 
     // Lock review for 24 hours across all devices
-    if (client?.id && selectedReviewText) {
-      markReviewUsed(client.id, selectedReviewText);
-      setUsedReviews((prev) => [...prev, selectedReviewText]);
+    if (client?.id && textToSubmit) {
+      markReviewUsed(client.id, textToSubmit);
+      setUsedReviews((prev) => [...prev, textToSubmit]);
     }
 
     // After user clicks review, shuffle to fresh variations for next time
@@ -378,7 +379,7 @@ function ReviewFunnelContent() {
       const freshNeg = generateNegativeFeedback(client, lang, selectedProduct);
       setGeneratedOptions(freshNeg);
     } else {
-      const freshTemplates = pickReviewTemplates(lang, client, selectedProduct, [...usedReviews, selectedReviewText]);
+      const freshTemplates = pickReviewTemplates(lang, client, selectedProduct, [...usedReviews, textToSubmit]);
       setActiveTemplates(freshTemplates);
     }
   };
@@ -684,34 +685,18 @@ function ReviewFunnelContent() {
           </div>
         </div>
 
-        {/* Action Button: 4-5 Stars -> Google Review & Direct WhatsApp | 1-3 Stars -> Direct WhatsApp */}
+        {/* Action Button: 4-5 Stars -> Submit to Google | 1-3 Stars -> Submit to WhatsApp */}
         {rating >= 4 ? (
           <div className="space-y-3 pt-1">
-            {/* Primary Action Button: 1-Tap Copy & Open Google (5★) */}
+            {/* Primary Action Button: Submit Your Review (Redirects to Google) */}
             <button
               type="button"
               onClick={handleCopyAndRedirect}
               className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-indigo-600 to-blue-600 hover:from-amber-600 hover:via-indigo-700 hover:to-blue-700 active:scale-95 text-white font-black text-sm sm:text-base shadow-xl shadow-indigo-500/30 transition-all flex items-center justify-center gap-2.5 cursor-pointer animate-pulse-subtle"
             >
-              <Copy className="w-5 h-5" />
-              <span>{ui.copyBtn}</span>
-              <ExternalLink className="w-4 h-4" />
-            </button>
-
-            {/* Also Send / Share Review Directly on WhatsApp to Business Owner */}
-            <button
-              type="button"
-              onClick={handleSendToWhatsApp}
-              className="w-full py-3.5 px-5 rounded-2xl bg-emerald-950/40 hover:bg-emerald-900/50 active:scale-95 text-emerald-300 hover:text-emerald-200 font-bold text-xs sm:text-sm border border-emerald-500/40 transition flex items-center justify-center gap-2 cursor-pointer shadow-md"
-            >
-              <MessageSquare className="w-4 h-4 text-emerald-400" />
-              <span>
-                {lang === 'gu'
-                  ? `📲 WhatsApp પર પણ માલિકને મોકલો (+${formatWhatsAppPhone(client.phone, agencyPhone)})`
-                  : lang === 'hi'
-                  ? `📲 WhatsApp पर भी मालिक को भेजें (+${formatWhatsAppPhone(client.phone, agencyPhone)})`
-                  : `📲 Also Send on WhatsApp to Owner (+${formatWhatsAppPhone(client.phone, agencyPhone)})`}
-              </span>
+              <CheckCircle2 className="w-5 h-5 text-amber-300" />
+              <span>{ui.submitReviewBtn || 'Submit Your Review'}</span>
+              <ExternalLink className="w-4 h-4 opacity-80" />
             </button>
 
             {/* 3 Step Quick Instructions Box */}
@@ -735,14 +720,14 @@ function ReviewFunnelContent() {
           </div>
         ) : (
           <div className="space-y-3 pt-1 animate-fade-in">
-            {/* Primary Action Button: Send Directly to Client's WhatsApp Number */}
+            {/* Primary Action Button: Submit Your Review (Redirects to WhatsApp) */}
             <button
               type="button"
               onClick={handleSendToWhatsApp}
               className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-700 active:scale-95 text-white font-black text-sm sm:text-base shadow-xl shadow-emerald-600/30 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
             >
-              <MessageSquare className="w-5 h-5" />
-              <span>{ui.sendWhatsAppBtn}</span>
+              <MessageSquare className="w-5 h-5 text-emerald-200" />
+              <span>{ui.submitReviewBtn || 'Submit Your Review'}</span>
             </button>
 
             {/* Direct WhatsApp Notice Card */}
@@ -753,10 +738,10 @@ function ReviewFunnelContent() {
               </div>
               <p className="text-[11px] text-slate-400 leading-relaxed">
                 {lang === 'gu'
-                  ? `તમારો રિવ્યૂ અને કસ્ટમ નોટ સીધા ${client.name} ના WhatsApp નંબર (+${formatWhatsAppPhone(client.phone, agencyPhone)}) પર મોકલવામાં આવશે.`
+                  ? `તમારો ફીડબેક સીધો ${client.name} ના WhatsApp નંબર (+${formatWhatsAppPhone(client.phone, agencyPhone)}) પર સુરક્ષિત રીતે મોકલવામાં આવશે.`
                   : lang === 'hi'
-                  ? `आपका रिव्यू और कस्टम नोट सीधे ${client.name} के WhatsApp नंबर (+${formatWhatsAppPhone(client.phone, agencyPhone)}) पर भेजा जाएगा।`
-                  : `Your review and custom note will be sent directly to ${client.name}'s WhatsApp (+${formatWhatsAppPhone(client.phone, agencyPhone)}).`}
+                  ? `आपका फीडबैक सीधे ${client.name} के WhatsApp नंबर (+${formatWhatsAppPhone(client.phone, agencyPhone)}) पर सुरक्षित रूप से भेजा जाएगा।`
+                  : `Your feedback will be sent directly to ${client.name}'s WhatsApp (+${formatWhatsAppPhone(client.phone, agencyPhone)}).`}
               </p>
             </div>
           </div>

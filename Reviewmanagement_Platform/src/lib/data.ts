@@ -295,6 +295,7 @@ export const UI_STRINGS: Record<LanguageCode, {
   customEditLabel: string;
   sendWhatsAppBtn: string;
   directWhatsAppNotice: string;
+  submitReviewBtn: string;
 }> = {
   en: {
     langName: "English",
@@ -306,6 +307,7 @@ export const UI_STRINGS: Record<LanguageCode, {
     allProductsLabel: "All / General",
     chooseReview: "Choose your favorite review or edit:",
     copyBtn: "📋 Copy & Open Google (5★)",
+    submitReviewBtn: "Submit Your Review",
     copiedToast: "✅ Copied! Opening Google Reviews... Just Paste & Submit!",
     regenerateBtn: "✨ Shuffle / Fresh Variations",
     customEditPlaceholder: "You can also type your custom review or note here...",
@@ -343,6 +345,7 @@ export const UI_STRINGS: Record<LanguageCode, {
     allProductsLabel: "सभी / जनरल",
     chooseReview: "अपना पसंदीदा रिव्यू चुनें या एडिट करें:",
     copyBtn: "📋 रिव्यू कॉपी करें और Google पर 5★ दें",
+    submitReviewBtn: "अपना रिव्यू सबमिट करें",
     copiedToast: "✅ रिव्यू कॉपी हो गया! अब बस गूगल पर पेस्ट (Paste) करके पोस्ट करें!",
     regenerateBtn: "✨ नया रिव्यू बनाएं (Shuffle)",
     customEditPlaceholder: "आप चाहें तो यहां अपना खुद का रिव्यू या नोट भी लिख सकते हैं...",
@@ -380,6 +383,7 @@ export const UI_STRINGS: Record<LanguageCode, {
     allProductsLabel: "બધું / જનરલ",
     chooseReview: "તમારો મનપસંદ રિવ્યૂ પસંદ કરો અથવા એડિટ કરો:",
     copyBtn: "📋 રિવ્યૂ કોપી કરો અને Google પર 5★ આપો",
+    submitReviewBtn: "તમારો રિવ્યૂ સબમિટ કરો",
     copiedToast: "✅ રિવ્યૂ કોપી થઈ ગયો! હવે ગૂગલ પર ફક્ત પેસ્ટ (Paste) કરીને પોસ્ટ કરો!",
     regenerateBtn: "✨ નવો રિવ્યૂ બનાવો (Shuffle)",
     customEditPlaceholder: "તમે અહીં તમારી રીતે પણ રિવ્યૂ કે કસ્ટમ નોટ લખી શકો છો...",
