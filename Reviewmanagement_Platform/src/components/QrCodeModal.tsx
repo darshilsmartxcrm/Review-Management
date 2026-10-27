@@ -36,8 +36,8 @@ export default function QrCodeModal({ isOpen, client, onClose }: QrCodeModalProp
 
       if (canvasRef.current) {
         QRCode.toCanvas(canvasRef.current, url, {
-          width: 300,
-          margin: 2,
+          width: 240,
+          margin: 1,
           color: {
             dark: '#020617',
             light: '#ffffff',
@@ -110,8 +110,12 @@ export default function QrCodeModal({ isOpen, client, onClose }: QrCodeModalProp
         </div>
 
         {/* QR Code Container */}
-        <div className="block p-4 rounded-3xl bg-white shadow-xl shadow-indigo-500/10 mb-3 border-4 border-slate-950 max-w-[280px] mx-auto">
-          <canvas ref={canvasRef} className="rounded-xl w-60 h-60 mx-auto" />
+        <div className="inline-flex items-center justify-center p-3.5 sm:p-4 rounded-3xl bg-white shadow-2xl shadow-indigo-500/10 mb-3 border border-slate-200/80 overflow-hidden mx-auto">
+          <canvas
+            ref={canvasRef}
+            className="block rounded-2xl mx-auto"
+            style={{ width: '240px', height: '240px', display: 'block' }}
+          />
         </div>
 
         {/* Plan Validity Status Window */}

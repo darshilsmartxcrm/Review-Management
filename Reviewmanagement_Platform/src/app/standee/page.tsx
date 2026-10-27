@@ -230,8 +230,12 @@ function StandeeContent() {
         </div>
 
         {/* QR Code Centerpiece */}
-        <div className="inline-block p-3.5 rounded-3xl border-2 border-slate-900 bg-white shadow-md mb-5">
-          <canvas ref={canvasRef} className="rounded-xl w-48 h-48 mx-auto" />
+        <div className="inline-flex items-center justify-center p-3.5 rounded-3xl border-2 border-slate-900 bg-white shadow-md mb-5 overflow-hidden mx-auto">
+          <canvas
+            ref={canvasRef}
+            className="block rounded-xl mx-auto"
+            style={{ width: '192px', height: '192px', display: 'block' }}
+          />
         </div>
 
         {/* Quick instructions */}
