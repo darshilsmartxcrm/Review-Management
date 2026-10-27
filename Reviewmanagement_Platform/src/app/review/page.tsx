@@ -332,14 +332,16 @@ function ReviewFunnelContent() {
 
     const targetUrl = formatGoogleReviewUrl(client.google_url);
 
-    // Open Google in new tab after 1.2 seconds so user reads step guide
-    setTimeout(() => {
+    // Open Google immediately on direct user tap (avoids iOS Safari and Chrome mobile popup blockers)
+    try {
       window.open(targetUrl, '_blank');
-    }, 1200);
+    } catch (e) {
+      console.warn('Window open notice:', e);
+    }
 
     setTimeout(() => {
       setCopiedToast(false);
-    }, 5000);
+    }, 4000);
 
     // Lock review for 24 hours across all devices
     if (client?.id) {
@@ -789,47 +791,94 @@ function ReviewFunnelContent() {
 
       {/* Redirect Instruction Modal */}
       {showRedirectModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in">
           <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl p-6 sm:p-7 text-slate-100 text-center space-y-4">
             <div className="w-14 h-14 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-8 h-8" />
             </div>
 
-            <h3 className="text-xl font-bold text-white">Review Copied to Clipboard!</h3>
+            <h3 className="text-xl font-bold text-white">
+              {lang === 'gu'
+                ? 'રિવ્યૂ કોપી થઈ ગયો છે!'
+                : lang === 'hi'
+                ? 'रिव्यू कॉपी हो गया है!'
+                : 'Review Copied to Clipboard!'}
+            </h3>
             
-            <p className="text-xs text-slate-300">
-              Opening Google Reviews write modal now... When the page opens:
+            <p className="text-xs text-slate-300 leading-relaxed">
+              {lang === 'gu'
+                ? 'ગૂગલ રિવ્યૂ પેજ ખુલ્યા પછી ફક્ત પેસ્ટ (Paste) કરો:'
+                : lang === 'hi'
+                ? 'गूगल रिव्यू पेज खुलने पर सिर्फ पेस्ट (Paste) करें:'
+                : 'When Google Reviews opens, simply paste and submit:'}
             </p>
 
-            <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2.5 text-left text-xs">
-              <div className="flex items-center gap-2 text-slate-200">
-                <span className="font-bold text-amber-400">Step 1:</span> Tap 5 Stars ⭐⭐⭐⭐⭐
+            <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 text-left text-xs">
+              <div className="flex items-start gap-2.5 text-slate-200">
+                <span className="font-bold text-amber-400 shrink-0">{ui.step1Title}:</span>
+                <span>{ui.step1Desc}</span>
               </div>
-              <div className="flex items-center gap-2 text-slate-200">
-                <span className="font-bold text-indigo-400">Step 2:</span> Paste the copied review 📋
+              <div className="flex items-start gap-2.5 text-slate-200">
+                <span className="font-bold text-indigo-400 shrink-0">{ui.step2Title}:</span>
+                <div>
+                  <span className="font-semibold text-white">{ui.step2Desc}</span>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    {lang === 'gu'
+                      ? '(ગૂગલના બોક્સમાં ૧ સેકન્ડ દબાવી રાખીને "Paste" પર ટેપ કરો, અથવા કીબોર્ડ પર દેખાતા રિવ્યૂ પર ટેપ કરો)'
+                      : lang === 'hi'
+                      ? '(गूगल के बॉक्स में १ सेकंड दबाकर "Paste" पर टैप करें, या कीबोर्ड पर दिख रहे रिव्यू पर टैप करें)'
+                      : '(Long-press inside Google\'s box and tap "Paste", or tap the suggestion on your keyboard)'}
+                  </p>
+                </div>
               </div>
-              <div className="flex items-center gap-2 text-slate-200">
-                <span className="font-bold text-emerald-400">Step 3:</span> Click Post! 🚀
+              <div className="flex items-start gap-2.5 text-slate-200">
+                <span className="font-bold text-emerald-400 shrink-0">{ui.step3Title}:</span>
+                <span>{ui.step3Desc}</span>
               </div>
             </div>
 
-            <div className="flex items-center justify-center gap-3 pt-2">
+            {/* Display the copied review preview with a quick copy button */}
+            <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 text-left">
+              <div className="flex items-center justify-between text-[10px] text-slate-400 mb-1">
+                <span>{lang === 'gu' ? 'કોપી થયેલો રિવ્યૂ:' : lang === 'hi' ? 'कॉपी किया गया रिव्यू:' : 'Copied Review:'}</span>
+                <span className="text-emerald-400 font-semibold">✓ {lang === 'gu' ? 'પેસ્ટ કરવા માટે તૈયાર' : lang === 'hi' ? 'पेस्ट करने के लिए तैयार' : 'Ready to Paste'}</span>
+              </div>
+              <p className="text-xs text-slate-300 italic line-clamp-2 select-all font-sans">
+                &ldquo;{selectedReviewText}&rdquo;
+              </p>
+            </div>
+
+            <div className="flex items-center justify-center gap-2.5 pt-1">
               <button
                 type="button"
-                onClick={() => setShowRedirectModal(false)}
-                className="py-2.5 px-6 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-white transition"
+                onClick={() => {
+                  copyToClipboardSafe(selectedReviewText);
+                  setCopiedToast(true);
+                  setTimeout(() => setCopiedToast(false), 2500);
+                }}
+                className="py-2.5 px-3.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 transition flex items-center gap-1.5 cursor-pointer"
               >
-                Close Window
+                <Copy className="w-3.5 h-3.5 text-indigo-400" />
+                <span>{lang === 'gu' ? 'ફરી કોપી' : lang === 'hi' ? 'फिर से कॉपी' : 'Copy'}</span>
               </button>
+
               <a
                 href={formatGoogleReviewUrl(client.google_url)}
                 target="_blank"
                 rel="noreferrer"
-                className="py-2.5 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-bold text-white transition flex items-center gap-1.5"
+                className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-xs font-bold text-white transition flex items-center gap-1.5 shadow-md shadow-indigo-500/20 cursor-pointer"
               >
-                <span>Open Google</span>
+                <span>{lang === 'gu' ? 'Google ખોલો' : lang === 'hi' ? 'Google खोलें' : 'Open Google'}</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
+
+              <button
+                type="button"
+                onClick={() => setShowRedirectModal(false)}
+                className="py-2.5 px-3 rounded-xl text-slate-400 hover:text-white text-xs transition cursor-pointer"
+              >
+                {lang === 'gu' ? 'બંધ કરો' : lang === 'hi' ? 'बंद करें' : 'Done'}
+              </button>
             </div>
           </div>
         </div>
