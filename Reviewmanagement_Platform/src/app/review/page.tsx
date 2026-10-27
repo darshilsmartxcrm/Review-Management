@@ -39,6 +39,7 @@ import {
   copyToClipboardSafe
 } from '../../lib/data';
 import ApplyLeadModal from '../../components/ApplyLeadModal';
+import VisualStepGuide from '../../components/VisualStepGuide';
 import {
   getStoredClients,
   saveStoredLeads,
@@ -745,24 +746,13 @@ function ReviewFunnelContent() {
               )}
             </button>
 
-            {/* 3 Step Quick Instructions Box */}
-            <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 grid grid-cols-3 gap-2 text-center text-xs">
-              <div className="space-y-1">
-                <span className="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-400 font-bold text-xs inline-flex items-center justify-center">1</span>
-                <p className="font-bold text-white">{ui.step1Title}</p>
-                <p className="text-[11px] text-slate-400">{ui.step1Desc}</p>
-              </div>
-              <div className="space-y-1">
-                <span className="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-400 font-bold text-xs inline-flex items-center justify-center">2</span>
-                <p className="font-bold text-white">{ui.step2Title}</p>
-                <p className="text-[11px] text-slate-400">{ui.step2Desc}</p>
-              </div>
-              <div className="space-y-1">
-                <span className="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-400 font-bold text-xs inline-flex items-center justify-center">3</span>
-                <p className="font-bold text-white">{ui.step3Title}</p>
-                <p className="text-[11px] text-slate-400">{ui.step3Desc}</p>
-              </div>
-            </div>
+            {/* Visual Step Guide: 1-Click Clipboard Copy + Instant 1-Tap Keyboard Suggestion (Podium/Birdeye Standard) */}
+            <VisualStepGuide
+              lang={lang}
+              selectedReviewText={selectedReviewText || generatedOptions[0]}
+              businessName={client.name}
+              variant="inline"
+            />
           </div>
         ) : (
           <div className="pt-1 animate-fade-in">
@@ -843,30 +833,30 @@ function ReviewFunnelContent() {
             <div className="space-y-1.5">
               <h3 className="text-lg font-bold text-white">
                 {lang === 'gu'
-                  ? 'રિવ્યૂ સબમિટ થઈ રહ્યો છે...'
+                  ? 'રિવ્યૂ કોપી થઈ ગયો છે!'
                   : lang === 'hi'
-                  ? 'रिव्यू सबमिट हो रहा है...'
-                  : 'Submitting Your Review...'}
+                  ? 'रिव्यू कॉपी हो गया है!'
+                  : 'Review Copied to Clipboard!'}
               </h3>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-amber-300 font-bold">
+                {lang === 'gu'
+                  ? '✓ ૧-ટેપ કીબોર્ડ ચિપ અથવા ૧-સેકન્ડ દબાવીને Paste કરો'
+                  : lang === 'hi'
+                  ? '✓ 1-टैप कीबोर्ड चिप या 1-सेकंड दबाकर Paste करें'
+                  : '✓ 1-Tap Keyboard Chip or 1-Sec Hold to Paste'}
+              </p>
+              <p className="text-[11px] text-slate-300">
                 {lang === 'gu'
                   ? (rating >= 4
-                      ? 'તમારો રિવ્યૂ તૈયાર થઈ રહ્યો છે... ગૂગલ પેજ પર લઈ જઈ રહ્યા છીએ...'
+                      ? 'ગૂગલ રિવ્યૂ પેજ ખુલી રહ્યું છે... કૃપા કરીને ૨ સેકન્ડ રાહ જુઓ...'
                       : 'તમારા ફીડબેક સાથે WhatsApp પર જોડાઈ રહ્યા છીએ...')
                   : lang === 'hi'
                   ? (rating >= 4
-                      ? 'आपका रिव्यू तैयार हो रहा है... गूगल पेज पर ले जा रहे हैं...'
+                      ? 'गूगल रिव्यू पेज खुल रहा है... कृपया २ सेकंड प्रतीक्षा करें...'
                       : 'आपकी प्रतिक्रिया के साथ व्हाट्सएप पर कनेक्ट हो रहे हैं...')
                   : (rating >= 4
-                      ? 'Preparing your review... Redirecting to Google...'
+                      ? 'Opening Google Reviews... Please wait 2 seconds...'
                       : 'Connecting to WhatsApp with your feedback...')}
-              </p>
-              <p className="text-[11px] text-indigo-400 font-semibold animate-pulse pt-1">
-                {lang === 'gu'
-                  ? 'કૃપા કરીને ૨ સેકન્ડ રાહ જુઓ...'
-                  : lang === 'hi'
-                  ? 'कृपया २ सेकंड प्रतीक्षा करें...'
-                  : 'Please wait 2 seconds... Redirecting...'}
               </p>
             </div>
 
@@ -883,95 +873,16 @@ function ReviewFunnelContent() {
 
       {/* Redirect Instruction Modal */}
       {showRedirectModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl p-6 sm:p-7 text-slate-100 text-center space-y-4">
-            <div className="w-14 h-14 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto">
-              <CheckCircle2 className="w-8 h-8" />
-            </div>
-
-            <h3 className="text-xl font-bold text-white">
-              {lang === 'gu'
-                ? 'રિવ્યૂ કોપી થઈ ગયો છે!'
-                : lang === 'hi'
-                ? 'रिव्यू कॉपी हो गया है!'
-                : 'Review Copied to Clipboard!'}
-            </h3>
-            
-            <p className="text-xs text-slate-300 leading-relaxed">
-              {lang === 'gu'
-                ? 'ગૂગલ રિવ્યૂ પેજ ખુલ્યા પછી ફક્ત પેસ્ટ (Paste) કરો:'
-                : lang === 'hi'
-                ? 'गूगल रिव्यू पेज खुलने पर सिर्फ पेस्ट (Paste) करें:'
-                : 'When Google Reviews opens, simply paste and submit:'}
-            </p>
-
-            <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 text-left text-xs">
-              <div className="flex items-start gap-2.5 text-slate-200">
-                <span className="font-bold text-amber-400 shrink-0">{ui.step1Title}:</span>
-                <span>{ui.step1Desc}</span>
-              </div>
-              <div className="flex items-start gap-2.5 text-slate-200">
-                <span className="font-bold text-indigo-400 shrink-0">{ui.step2Title}:</span>
-                <div>
-                  <span className="font-semibold text-white">{ui.step2Desc}</span>
-                  <p className="text-[11px] text-slate-400 mt-0.5">
-                    {lang === 'gu'
-                      ? '(ગૂગલના બોક્સમાં ૧ સેકન્ડ દબાવી રાખીને "Paste" પર ટેપ કરો, અથવા કીબોર્ડ પર દેખાતા રિવ્યૂ પર ટેપ કરો)'
-                      : lang === 'hi'
-                      ? '(गूगल के बॉक्स में १ सेकंड दबाकर "Paste" पर टैप करें, या कीबोर्ड पर दिख रहे रिव्यू पर टैप करें)'
-                      : '(Long-press inside Google\'s box and tap "Paste", or tap the suggestion on your keyboard)'}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-2.5 text-slate-200">
-                <span className="font-bold text-emerald-400 shrink-0">{ui.step3Title}:</span>
-                <span>{ui.step3Desc}</span>
-              </div>
-            </div>
-
-            {/* Display the copied review preview with a quick copy button */}
-            <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 text-left">
-              <div className="flex items-center justify-between text-[10px] text-slate-400 mb-1">
-                <span>{lang === 'gu' ? 'કોપી થયેલો રિવ્યૂ:' : lang === 'hi' ? 'कॉपी किया गया रिव्यू:' : 'Copied Review:'}</span>
-                <span className="text-emerald-400 font-semibold">✓ {lang === 'gu' ? 'પેસ્ટ કરવા માટે તૈયાર' : lang === 'hi' ? 'पेस्ट करने के लिए तैयार' : 'Ready to Paste'}</span>
-              </div>
-              <p className="text-xs text-slate-300 italic line-clamp-2 select-all font-sans">
-                &ldquo;{selectedReviewText}&rdquo;
-              </p>
-            </div>
-
-            <div className="flex items-center justify-center gap-2.5 pt-1">
-              <button
-                type="button"
-                onClick={() => {
-                  copyToClipboardSafe(selectedReviewText);
-                  setCopiedToast(true);
-                  setTimeout(() => setCopiedToast(false), 2500);
-                }}
-                className="py-2.5 px-3.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 transition flex items-center gap-1.5 cursor-pointer"
-              >
-                <Copy className="w-3.5 h-3.5 text-indigo-400" />
-                <span>{lang === 'gu' ? 'ફરી કોપી' : lang === 'hi' ? 'फिर से कॉपी' : 'Copy'}</span>
-              </button>
-
-              <a
-                href={formatGoogleReviewUrl(client.google_url)}
-                target="_blank"
-                rel="noreferrer"
-                className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-xs font-bold text-white transition flex items-center gap-1.5 shadow-md shadow-indigo-500/20 cursor-pointer"
-              >
-                <span>{lang === 'gu' ? 'Google ખોલો' : lang === 'hi' ? 'Google खोलें' : 'Open Google'}</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-
-              <button
-                type="button"
-                onClick={() => setShowRedirectModal(false)}
-                className="py-2.5 px-3 rounded-xl text-slate-400 hover:text-white text-xs transition cursor-pointer"
-              >
-                {lang === 'gu' ? 'બંધ કરો' : lang === 'hi' ? 'बंद करें' : 'Done'}
-              </button>
-            </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in overflow-y-auto">
+          <div className="w-full max-w-lg my-auto">
+            <VisualStepGuide
+              lang={lang}
+              selectedReviewText={selectedReviewText || generatedOptions[0]}
+              businessName={client.name}
+              variant="modal"
+              googleUrl={formatGoogleReviewUrl(client.google_url)}
+              onClose={() => setShowRedirectModal(false)}
+            />
           </div>
         </div>
       )}

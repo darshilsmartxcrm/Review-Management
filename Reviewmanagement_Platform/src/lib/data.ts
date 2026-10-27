@@ -276,6 +276,12 @@ export const UI_STRINGS: Record<LanguageCode, {
   step1Desc: string;
   step2Title: string;
   step2Desc: string;
+  step2ChipTitle: string;
+  step2ChipDesc: string;
+  step2LongPressTitle: string;
+  step2LongPressDesc: string;
+  industryGuideBadge: string;
+  industryGuideSub: string;
   step3Title: string;
   step3Desc: string;
   negHeading: string;
@@ -317,7 +323,13 @@ export const UI_STRINGS: Record<LanguageCode, {
     step1Title: "Step 1",
     step1Desc: "Select 5 Stars ⭐⭐⭐⭐⭐",
     step2Title: "Step 2",
-    step2Desc: "Paste your review 📋",
+    step2Desc: "Paste your review (1-Tap Chip or Long-Press) 📋",
+    step2ChipTitle: "Instant 1-Tap Keyboard Suggestion",
+    step2ChipDesc: "Tap inside Google's review box — your review appears as a 1-tap suggestion chip right above your keyboard (Android Gboard & iPhone iOS). Tap it once to fill!",
+    step2LongPressTitle: "Or 1-Second Long-Press",
+    step2LongPressDesc: "Hold your finger inside Google's review box for 1 second and tap 'Paste'.",
+    industryGuideBadge: "⚡ Used by Top Industry Platforms (Podium, Birdeye, Trustpilot)",
+    industryGuideSub: "Automatic 1-Click Clipboard Copy is activated. Just tap or paste on Google!",
     step3Title: "Step 3",
     step3Desc: "Hit Post! 🚀",
     negHeading: "We are deeply sorry for your experience",
@@ -355,7 +367,13 @@ export const UI_STRINGS: Record<LanguageCode, {
     step1Title: "स्टेप 1",
     step1Desc: "5 स्टार ⭐⭐⭐⭐⭐ चुनें",
     step2Title: "स्टेप 2",
-    step2Desc: "रिव्यू पेस्ट (Paste) करें 📋",
+    step2Desc: "रिव्यू पेस्ट (Paste) करें (1-टैप चिप या दबाकर रखें) 📋",
+    step2ChipTitle: "तुरंत 1-टैप कीबोर्ड सुझाव (Keyboard Chip)",
+    step2ChipDesc: "Google रिव्यू बॉक्स में टैप करें — कीबोर्ड (Android Gboard या iPhone) के ठीक ऊपर रिव्यू चिप दिखेगा। बस 1 बार टैप करें और पूरा रिव्यू भर जाएगा!",
+    step2LongPressTitle: "या 1-सेकंड दबाकर रखें (Long-Press)",
+    step2LongPressDesc: "Google के रिव्यू बॉक्स में 1 सेकंड तक उंगली दबाकर रखें और 'Paste' पर टैप करें।",
+    industryGuideBadge: "⚡ दुनिया के शीर्ष प्लेटफॉर्म्स (Podium, Birdeye) जैसी 100% सुरक्षित तकनीक",
+    industryGuideSub: "रिव्यू आपके फोन के क्लिपबोर्ड पर कॉपी हो गया है। बस Google पर पेस्ट करें!",
     step3Title: "स्टेप 3",
     step3Desc: "Post बटन दबाएं! 🚀",
     negHeading: "हमें खेद है कि आपका अनुभव अच्छा नहीं रहा",
@@ -393,7 +411,13 @@ export const UI_STRINGS: Record<LanguageCode, {
     step1Title: "પગલું 1",
     step1Desc: "5 સ્ટાર ⭐⭐⭐⭐⭐ પસંદ કરો",
     step2Title: "પગલું 2",
-    step2Desc: "રિવ્યૂ પેસ્ટ (Paste) કરો 📋",
+    step2Desc: "રિવ્યૂ પેસ્ટ (Paste) કરો (૧-ટેપ ચિપ અથવા દબાવી રાખો) 📋",
+    step2ChipTitle: "ત્વરિત ૧-ટેપ કીબોર્ડ સૂચન (Keyboard Chip)",
+    step2ChipDesc: "Google ના રિવ્યૂ બોક્સમાં ટેપ કરો — કીબોર્ડ (Android Gboard કે iPhone) ની ઉપર રિવ્યૂ ચિપ દેખાશે. ફક્ત ૧ વાર ટેપ કરો અને આખો રિવ્યૂ ભરાઈ જશે!",
+    step2LongPressTitle: "અથવા ૧ સેકન્ડ દબાવી રાખો (Long-Press)",
+    step2LongPressDesc: "Google ના રિવ્યૂ બોક્સમાં ૧ સેકન્ડ આંગળી દબાવી રાખીને 'Paste' પર ટેપ કરો.",
+    industryGuideBadge: "⚡ વિશ્વના અગ્રણી પ્લેટફોર્મ્સ (Podium, Birdeye) જેવી ૧૦૦% પ્રમાણિત ટેક્નોલોજી",
+    industryGuideSub: "રિવ્યૂ તમારા ફોનના ક્લિપબોર્ડ પર કોપી થઈ ગયો છે. ફક્ત Google પર પેસ્ટ કરો!",
     step3Title: "પગલું 3",
     step3Desc: "Post બટન દબાવો! 🚀",
     negHeading: "અમને દિલગીરી છે કે તમારો અનુભવ સારો ન રહ્યો",
@@ -986,26 +1010,45 @@ export function formatGoogleReviewUrl(inputUrlOrPlaceId: string): string {
 export async function copyToClipboardSafe(text: string): Promise<boolean> {
   if (!text || typeof window === 'undefined') return false;
 
+  // 1. Try modern async Clipboard API first
   if (navigator?.clipboard?.writeText) {
     try {
       await navigator.clipboard.writeText(text);
       return true;
     } catch {
-      // fallback below
+      // Fallback to execCommand below
     }
   }
 
+  // 2. Resilient mobile & desktop fallback (iOS Safari, Android WebViews, older browsers)
   try {
     const textArea = document.createElement('textarea');
     textArea.value = text;
+    // Position offscreen to prevent UI jumps, set 16px to prevent iOS auto-zoom
     textArea.style.position = 'fixed';
-    textArea.style.top = '0';
-    textArea.style.left = '0';
+    textArea.style.top = '-9999px';
+    textArea.style.left = '-9999px';
     textArea.style.opacity = '0';
+    textArea.style.fontSize = '16px';
     textArea.setAttribute('readonly', '');
     document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
+
+    // iOS specific selection handling
+    const isIOS = /ipad|iphone|ipod/i.test(navigator.userAgent);
+    if (isIOS) {
+      const range = document.createRange();
+      range.selectNodeContents(textArea);
+      const selection = window.getSelection();
+      if (selection) {
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+      textArea.setSelectionRange(0, 999999);
+    } else {
+      textArea.focus();
+      textArea.select();
+    }
+
     const successful = document.execCommand('copy');
     document.body.removeChild(textArea);
     return successful;

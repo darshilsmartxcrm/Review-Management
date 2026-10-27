@@ -1,6 +1,12 @@
 [
   {
     "clientId": "client_1793089490454",
+    "reviewText": "Smooth process and great value for money for Medical Botox at Sculpt Skin Care Clinic. Honest advice with zero hidden charges. 5/5 stars!",
+    "normalized": "smoothprocessandgreatvalueformoneyformedicalbotoxatsculptskincareclinichonestadvicewithzerohiddencharges55stars",
+    "timestamp": 1793095293493
+  },
+  {
+    "clientId": "client_1793089490454",
     "reviewText": "Top-notch quality Medical Botox and very genuine pricing at Sculpt Skin Care Clinic. Great value for money and polite behavior throughout.",
     "normalized": "topnotchqualitymedicalbotoxandverygenuinepricingatsculptskincareclinicgreatvalueformoneyandpolitebehaviorthroughout",
     "timestamp": 1793092911806

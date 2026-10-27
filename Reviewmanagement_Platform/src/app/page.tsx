@@ -30,6 +30,7 @@ import { INDUSTRY_CATALOG, UI_STRINGS, generateReviews } from '../lib/data';
 import { saveStoredLeads, getStoredLeads } from '../lib/storage';
 import { leadsApi } from '../api/leadsApi';
 import ApplyLeadModal from '../components/ApplyLeadModal';
+import VisualStepGuide from '../components/VisualStepGuide';
 import Toast from '../components/Toast';
 
 export default function PublicLandingPage() {
@@ -121,7 +122,7 @@ export default function PublicLandingPage() {
           <nav className="hidden md:flex items-center gap-6 text-xs font-bold text-slate-300">
             <a href="#demo" className="hover:text-indigo-400 transition">Live Demo</a>
             <a href="#how-it-works" className="hover:text-indigo-400 transition">How It Works</a>
-            <a href="#features" className="hover:text-indigo-400 transition">Features</a>
+            <a href="#industry-standard" className="hover:text-indigo-400 transition">Industry Standard</a>
             <a href="#standee" className="hover:text-indigo-400 transition">Printed Standees</a>
           </nav>
 
@@ -474,6 +475,121 @@ export default function PublicLandingPage() {
               </p>
             </div>
 
+          </div>
+
+        </div>
+      </section>
+
+      {/* ============================================================== */}
+      {/* 3. HOW TOP INDUSTRY PLATFORMS HANDLE THIS (Podium, Birdeye)   */}
+      {/* ============================================================== */}
+      <section id="industry-standard" className="py-20 px-4 sm:px-6 bg-slate-900/60 border-y border-slate-800/80 relative">
+        <div className="max-w-6xl mx-auto space-y-12">
+
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-extrabold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>3. How Top Industry Platforms Handle This</span>
+            </div>
+
+            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+              The Exact Mechanism Used By Global Giants (Podium, Birdeye, Trustpilot &amp; Grade.us)
+            </h2>
+
+            <p className="text-sm text-slate-300 leading-relaxed">
+              Google does not allow third-party websites to auto-fill review forms directly to prevent fake reviews. Every major review platform in the world uses the exact 1-Click Clipboard Copy + Instant Keyboard Suggestion mechanism we have built:
+            </p>
+          </div>
+
+          {/* 4 Core Pillars Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            {/* 1. Automatic Clipboard Copy (1-Click) */}
+            <div className="p-5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3 hover:border-indigo-500/50 transition">
+              <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center font-bold">
+                <Copy className="w-5 h-5" />
+              </div>
+              <h3 className="text-sm font-bold text-white">Automatic Clipboard Copy (1-Click)</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                When the customer selects their review and clicks &quot;Submit Your Review&quot;, the text is immediately copied to their phone’s clipboard with universal Android &amp; iOS reliability.
+              </p>
+            </div>
+
+            {/* 2. Instant 1-Tap Keyboard Suggestion */}
+            <div className="p-5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3 hover:border-amber-500/50 transition">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center font-bold">
+                <Smartphone className="w-5 h-5" />
+              </div>
+              <h3 className="text-sm font-bold text-white">Instant 1-Tap Keyboard Suggestion</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                On both Android (Gboard) and iPhone (iOS keyboard), when the customer taps into Google’s review box, the copied review text automatically appears as a 1-tap suggestion chip right above the keyboard. Tapping once fills the full review immediately!
+              </p>
+            </div>
+
+            {/* 3. 1-Second Long-Press */}
+            <div className="p-5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3 hover:border-blue-500/50 transition">
+              <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center font-bold">
+                <CheckCircle2 className="w-5 h-5" />
+              </div>
+              <h3 className="text-sm font-bold text-white">1-Second Long-Press</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Alternatively, the customer holds their finger inside Google&apos;s review box for 1 second and taps &quot;Paste&quot;. Quick and effortless on any mobile phone.
+              </p>
+            </div>
+
+            {/* 4. Visual Step Guide */}
+            <div className="p-5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3 hover:border-emerald-500/50 transition">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center font-bold">
+                <Globe className="w-5 h-5" />
+              </div>
+              <h3 className="text-sm font-bold text-white">Visual Step Guide (EN / HI / GU)</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Our app displays a clear guide in English, Hindi, and Gujarati explaining these simple steps with simulated mobile keyboard chips and touch previews so there is zero confusion.
+              </p>
+            </div>
+
+          </div>
+
+          {/* Live Visual Step Guide Interactive Demonstration */}
+          <div className="max-w-3xl mx-auto space-y-4 pt-4">
+            <div className="text-center space-y-1">
+              <h4 className="text-base font-extrabold text-white">
+                Live Trilingual Visual Step Guide Preview
+              </h4>
+              <p className="text-xs text-slate-400">
+                Switch languages below to view the interactive mobile instructions provided to your customers:
+              </p>
+            </div>
+
+            {/* Language Switcher for Showcase */}
+            <div className="flex justify-center gap-2">
+              {[
+                { code: 'en', label: '🇬🇧 English' },
+                { code: 'hi', label: '🇮🇳 हिन्दी' },
+                { code: 'gu', label: '🇮🇳 ગુજરાતી' },
+              ].map((item) => (
+                <button
+                  key={item.code}
+                  type="button"
+                  onClick={() => setDemoLang(item.code as LanguageCode)}
+                  className={`py-1.5 px-3.5 rounded-xl text-xs font-bold border transition cursor-pointer ${
+                    demoLang === item.code
+                      ? 'bg-gradient-to-r from-indigo-500 to-blue-600 border-indigo-400 text-white shadow-md'
+                      : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Render VisualStepGuide Component */}
+            <VisualStepGuide
+              lang={demoLang}
+              selectedReviewText={demoReviews[0] || 'Outstanding experience! The staff was very attentive, polite and professional.'}
+              businessName="SmartXCRM"
+              variant="showcase"
+            />
           </div>
 
         </div>
