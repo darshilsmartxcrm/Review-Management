@@ -367,9 +367,14 @@ export default function ClientModal({ isOpen, client, onClose, onSave, onOpenCat
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                City / Location <span className="text-rose-400">*</span>
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                  City / Location <span className="text-rose-400">*</span>
+                </label>
+                <span className="text-[10px] text-indigo-400 font-medium">
+                  Auto-customizes reviews to city
+                </span>
+              </div>
               <div className="relative">
                 <MapPin className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
                 <input
@@ -377,9 +382,28 @@ export default function ClientModal({ isOpen, client, onClose, onSave, onOpenCat
                   required
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  placeholder="e.g. Ahmedabad, Surat"
+                  placeholder="e.g. Ahmedabad, Surat, Vadodara, Rajkot"
                   className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                 />
+              </div>
+
+              {/* Quick Popular City Selection Chips */}
+              <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                <span className="text-[10px] text-slate-500 font-medium">Quick:</span>
+                {['Ahmedabad', 'Surat', 'Vadodara', 'Rajkot', 'Bhavnagar', 'Jamnagar', 'Mumbai', 'Delhi'].map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => setCity(c)}
+                    className={`text-[10px] px-2 py-0.5 rounded-md border transition cursor-pointer font-medium ${
+                      city.trim().toLowerCase() === c.toLowerCase()
+                        ? 'bg-indigo-600 border-indigo-400 text-white font-bold shadow-sm'
+                        : 'bg-slate-800/80 border-slate-700 text-slate-400 hover:text-white hover:border-slate-600'
+                    }`}
+                  >
+                    {c}
+                  </button>
+                ))}
               </div>
             </div>
           </div>

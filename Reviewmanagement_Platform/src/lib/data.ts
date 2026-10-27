@@ -467,19 +467,22 @@ function buildTierTemplates(
 // Format 1: Short & Punchy (1-2 sentences, ~12-25 words)
 const EN_SHORT_STARTS = [
   "Best place in {city} for {product}!",
+  "Hands down the most amazing place in {city} for {product}!",
   "Top-notch quality {product} and very genuine pricing at {name}.",
   "Quick, reliable, and hassle-free service for {product} at {name}.",
   "5 stars to {name}! Got my {product} right on time.",
   "Super impressed with {name} in {city} for {product}.",
+  "Such an amazing experience with {name} in {city} for {product}!",
   "Outstanding quality {product} with zero compromises at {name}.",
   "Very happy with my purchase of {product} from {name}.",
   "Excellent customer service and genuine {product} at {name}.",
   "Fantastic experience getting {product} from {name} in {city}.",
   "Extremely reliable establishment in {city} for {product}.",
+  "Simply the most amazing customer service and polite team in {city}!",
   "Unbeatable quality and friendly staff at {name}.",
   "Smooth process and great value for money for {product} at {name}.",
   "Got exactly what I needed at {name} in {city}.",
-  "Truly a five-star experience at {name} for {product}.",
+  "Truly an amazing five-star experience at {name} for {product}.",
   "Wonderful visit to {name} in {city}!"
 ];
 
@@ -493,43 +496,44 @@ const EN_SHORT_ENDS = [
   "Great value for money and polite behavior throughout.",
   "Prompt response and great attention to detail.",
   "Honest advice with zero hidden charges. 5/5 stars!",
-  "Easily the best in {city}. Strongly recommended!",
+  "Easily the best and most amazing in {city}. Strongly recommended!",
   "Punctual, cooperative, and highly professional.",
-  "Delighted by their efficiency and friendly approach!"
+  "Delighted by their efficiency and friendly approach!",
+  "Such an amazing asset for our city {city}. Truly a 10/10!"
 ];
 
 // Format 2: Medium / Recommendation / Gratitude (2-3 sentences, ~25-35 words)
 const EN_MED_STARTS = [
-  "If you are looking for reliable {product} in {city}, {name} should be your first stop.",
-  "A big thank you to {name} for handling our requirement for {product} so professionally.",
-  "Anyone in {city} needing genuine {product} must visit {name} without hesitation.",
+  "If you are looking for reliable and amazing {product} in {city}, {name} should be your first stop.",
+  "A big thank you to {name} for handling our requirement for {product} so professionally in {city}.",
+  "Anyone in {city} needing genuine and amazing {product} must visit {name} without hesitation.",
   "Worth every single rupee spent at {name} for {product}.",
   "Thank you {name} for the wonderful service and on-time delivery of {product}.",
-  "Finding honest dealers for {product} in {city} is hard, but {name} proved to be a breath of fresh air.",
-  "I was referred to {name} by a friend for {product}, and they lived up to the praise.",
-  "The honesty, transparency, and fair pricing at {name} for {product} truly set them apart.",
+  "Finding honest dealers for {product} in {city} is hard, but {name} proved to be an amazing breath of fresh air.",
+  "I was referred to {name} by a friend for {product}, and they lived up to their amazing reputation in {city}.",
+  "The honesty, transparency, and fair pricing at {name} for {product} truly set them apart in {city}.",
   "We are very grateful to the team at {name} for guiding us so patiently regarding {product}.",
-  "Whenever anyone asks me for {product} in {city}, I immediately recommend {name}.",
+  "Whenever anyone in {city} asks me for amazing {product}, I immediately recommend {name}.",
   "Superb customer care and authentic {product} provided by {name} in {city}.",
   "From the very first call, {name} handled our queries regarding {product} with utmost clarity.",
   "Honest dealings, zero pushy sales tactics, and authentic {product} at {name}.",
   "Deeply satisfied with how {name} in {city} managed our requirement for {product}.",
-  "A shining example of how a customer-first business in {city} should be run."
+  "A shining example of how an amazing customer-first business in {city} should be run."
 ];
 
 const EN_MED_ENDS = [
-  "They explained all the options transparently without rushing. 100% recommended to everyone!",
+  "They explained all the options transparently without rushing. 100% recommended to everyone in {city}!",
   "The staff is polite, well-trained, and genuinely dedicated to customer happiness. 5/5 stars!",
-  "The quality exceeded our expectations and the pricing was very reasonable for {city}.",
+  "The quality exceeded our expectations and the pricing was amazing for {city}.",
   "No hidden costs, prompt delivery, and completely peaceful experience throughout.",
   "Their warm hospitality and polite guidance made everything effortless. Full 5 stars!",
   "The finishing of {product} is superb and the team is always ready to assist with a smile.",
   "They take personal interest in solving your requirements rather than just making a sale.",
-  "Fast turnaround, respectful behavior, and guaranteed peace of mind. Must visit!",
+  "Fast turnaround, respectful behavior, and guaranteed peace of mind. Must visit in {city}!",
   "Clear billing, timely execution, and humble conduct across all staff members.",
   "Extremely cooperative team who helped us pick the exact right option for {product}.",
   "Great punctuality, strict quality standards, and genuine care for the customer.",
-  "You rarely find such humble and knowledgeable professionals under one roof in {city}.",
+  "You rarely find such humble, knowledgeable, and amazing professionals in {city}.",
   "Delivered right on time with flawless standards. Thank you {name} team!",
   "Honest advice, fair rates, and dependable post-service support as well.",
   "Will definitely recommend to all my family and colleagues in {city}!"
@@ -550,7 +554,9 @@ const EN_DET_STARTS = [
   "Decided to trust {name} for our {product} requirement, and they delivered far beyond what was originally promised.",
   "Everything from ambiance to staff professionalism at {name} in {city} reflects their dedication to top quality.",
   "The attention to detail and care that {name} puts into {product} is something you don't easily find in {city}.",
-  "Booked service for {product} at {name} and was blown away by their systematic coordination and promptness."
+  "Booked service for {product} at {name} and was blown away by their systematic coordination and promptness.",
+  "Hands down the most amazing experience with {product} we have had in {city}, thanks to {name}.",
+  "Searching for top-tier {product} across {city} led us straight to {name}, and the service was absolutely amazing."
 ];
 
 const EN_DET_ENDS = [
@@ -567,79 +573,81 @@ const EN_DET_ENDS = [
   "A well-organized setup where customer comfort is always the highest priority. Genuine quality, transparent rates, and friendly staff. Keep up the phenomenal work!",
   "They took the time to answer all our questions, followed up diligently, and ensured complete peace of mind. Outstanding service and honest dealings throughout {city}!",
   "Flawless execution, fair pricing, and dependable post-delivery assistance. The entire staff treated us with great respect and warmth. Unquestionably 5 stars!",
-  "From start to finish, the experience was transparent, fast, and completely genuine. We couldn't be happier with our {product} from {name}. Best in {city}!"
+  "From start to finish, the experience was transparent, fast, and completely genuine. We couldn't be happier with our {product} from {name}. Best in {city}!",
+  "Such an amazing and honest business for anyone living in {city}. Truly world-class standards and polite staff. 5/5 stars!"
 ];
 
 // ==================== HINDI (3 DISTINCT FORMAT TIERS) ====================
 // Format 1: Short & Punchy (1-2 sentences)
 const HI_SHORT_STARTS = [
-  "{city} में {product} के लिए {name} सबसे बेस्ट जगह है!",
-  "शानदार क्वालिटी और एकदम सही रेट! {name} से {product} लेने का अनुभव बहुत बढ़िया रहा।",
+  "{city} में {product} के लिए {name} सचमुच सबसे अमेजिंग और बेस्ट जगह है!",
+  "अमेजिंग सर्विस, शानदार क्वालिटी और एकदम सही रेट! {name} से {product} लेने का अनुभव बहुत बढ़िया रहा।",
+  "{city} के अंदर {name} जैसा अमेजिंग काम और फ्रेंडली स्टाफ देखकर दिल खुश हो गया।",
   "लाजवाब सर्विस और फ्रेंडली स्टाफ! {name} में {product} देखकर दिल खुश हो गया।",
-  "5 स्टार से कम कुछ नहीं! {name} का काम वाकई में काबिले-तारीफ है।",
+  "5 स्टार से कम कुछ नहीं! {city} में {name} का काम वाकई में अमेजिंग और काबिले-तारीफ है।",
   "{name} में {product} की क्वालिटी देखकर मैं बहुत प्रभावित हुआ।",
-  "बिना किसी झिझक के 10 में से 10 रेटिंग! {city} में {name} सचमुच नंबर 1 है।",
-  "सुपर फास्ट सर्विस और असली {product}! {name} ने दिल जीत लिया।",
-  "बेहद संतुष्ट ग्राहक! {name} से {product} लेकर पूरा पैसा वसूल हुआ।",
-  "{city} में {product} के लिए सबसे भरोसेमंद दुकान यानी {name}।",
-  "ईमानदार लोग और बेहतरीन काम! {name} का अनुभव बहुत सुखद रहा।",
+  "बिना किसी झिझक के 10 में से 10 रेटिंग! {city} में {name} सचमुच नंबर 1 और अमेजिंग है।",
+  "सुपर फास्ट सर्विस और असली {product}! {name} ने {city} में दिल जीत लिया।",
+  "बेहद संतुष्ट ग्राहक! {name} से {product} लेकर {city} में पूरा पैसा वसूल हुआ।",
+  "{city} में {product} के लिए सबसे अमेजिंग और भरोसेमंद दुकान यानी {name}।",
+  "ईमानदार लोग और बेहतरीन काम! {name} का अनुभव बहुत सुखद और अमेजिंग रहा।",
   "समय की पाबंदी और उम्दा काम! {name} में {product} की सर्विस लाजवाब है।",
   "बिल्कुल सही सलाह और उचित दाम! {name} की टीम बहुत ही सहयोगी है।",
-  "पहली बार में ही पूरा भरोसा जीत लिया! {name} की सर्विस बहुत अच्छी है।",
-  "{city} में ऐसा बेहतरीन व्यवहार और क्वालिटी मिलना बहुत मुश्किल है।",
+  "पहली बार में ही पूरा भरोसा जीत लिया! {city} में {name} की सर्विस बहुत अमेजिंग है।",
+  "{city} में ऐसा बेहतरीन व्यवहार, अमेजिंग माहौल और क्वालिटी मिलना बहुत सुखद है।",
   "उत्कृष्ट काम और सम्मानजनक सेवा के लिए {name} को पूरे 5 स्टार!"
 ];
 
 const HI_SHORT_ENDS = [
   "स्टाफ का व्यवहार बहुत ही विनम्र और मददगार है। 10/10!",
   "काम पूरी ईमानदारी और सफाई से किया गया। दिल से 5 स्टार!",
-  "सभी को यहां आने की पुरजोर सिफारिश करता हूँ!",
-  "पैसे की पूरी कीमत वसूल! बहुत-बहुत धन्यवाद {name} टीम।",
-  "भविष्य में भी मैं यहीं आऊंगा। शानदार काम!",
+  "पूरे {city} में सभी को यहां आने की पुरजोर सिफारिश करता हूँ!",
+  "पैसे की पूरी कीमत वसूल! {city} में {name} की अमेजिंग टीम को बहुत-बहुत धन्यवाद।",
+  "भविष्य में भी मैं यहीं आऊंगा। शानदार और अमेजिंग काम!",
   "पारदर्शी बिलिंग और कोई छिपा हुआ चार्ज नहीं। 5/5 स्टार!",
-  "कम समय में बेहतरीन परिणाम। कीप इट अप!",
+  "कम समय में इतना अमेजिंग परिणाम। कीप इट अप!",
   "हर किसी को {city} में {name} जरूर विजिट करना चाहिए।",
-  "सच्ची सलाह और उच्च स्तर की सेवा के लिए आभार।",
+  "सच्ची सलाह और उच्च स्तर की अमेजिंग सेवा के लिए आभार।",
   "बिना किसी संकोच के 100% रिकमेंडेड!",
   "ग्राहक की संतुष्टि ही इनकी पहली प्राथमिकता है।",
-  "शानदार अनुभव, पांच सितारा रेटिंग पूरी तरह हकदार!"
+  "{city} में पांच सितारा अमेजिंग अनुभव, पूरी तरह हकदार!"
 ];
 
 // Format 2: Medium / Recommendation / Gratitude (2-3 sentences)
 const HI_MED_STARTS = [
-  "अगर आप {city} में असली और भरोसेमंद {product} खोज रहे हैं, तो {name} सबसे उत्तम विकल्प है।",
-  "{name} की पूरी टीम का बहुत-बहुत धन्यवाद! {product} को लेकर इन्होंने जिस धैर्य से मार्गदर्शन किया, वह सराहनीय है।",
-  "काफी रिसर्च के बाद मैंने {city} में {name} को चुना और इन्होंने बिल्कुल निराश नहीं किया।",
-  "एक दोस्त की सिफारिश पर {name} गया था और {product} की सर्विस देखकर बहुत खुशी हुई।",
+  "अगर आप {city} में असली, भरोसेमंद और अमेजिंग {product} खोज रहे हैं, तो {name} सबसे उत्तम विकल्प है।",
+  "{name} की पूरी टीम का बहुत-बहुत धन्यवाद! {city} में {product} को लेकर इन्होंने जिस धैर्य से मार्गदर्शन किया, वह अमेजिंग है।",
+  "काफी रिसर्च के बाद मैंने {city} में {name} को चुना और इनका अमेजिंग काम देखकर बहुत खुशी हुई।",
+  "एक दोस्त की सिफारिश पर {name} गया था और {city} में {product} की अमेजिंग सर्विस देखकर दिल जीत लिया।",
   "ईमानदार व्यवहार और सही दाम के लिए {city} में {name} की एक अलग ही पहचान है।",
-  "परिवार के साथ {name} विजिट किया था, {product} के लिए इन्होंने बहुत ही अच्छा सपोर्ट दिया।",
-  "मार्केट में बहुत से लोग हैं, लेकिन {name} जैसी पारदर्शिता और सफाई कहीं देखने को नहीं मिलती।",
+  "परिवार के साथ {name} विजिट किया था, {city} में {product} के लिए इन्होंने बहुत ही अमेजिंग सपोर्ट दिया।",
+  "मार्केट में बहुत से लोग हैं, लेकिन {city} में {name} जैसी पारदर्शिता और सफाई कहीं देखने को नहीं मिलती।",
   "{product} से जुड़ी हर छोटी-बड़ी जानकारी {name} की टीम ने बहुत स्पष्टता से समझाई।",
-  "शानदार सर्विस और अपनेपन के लिए आभार {name}! {product} की क्वालिटी एकदम परफेक्ट है।",
-  "बिना किसी दबाव के सही सलाह देना और असली प्रोडक्ट उपलब्ध कराना इनकी सबसे बड़ी ताकत है।",
-  "जितनी तारीफ की जाए कम है! {city} में {name} का काम सचमुच गर्व करने लायक है।",
-  "जब भी {city} में किसी को {product} की जरूरत होती है, मैं सिर्फ {name} का ही नाम लेता हूँ।",
+  "शानदार सर्विस और अपनेपन के लिए आभार {name}! {city} में {product} की क्वालिटी एकदम परफेक्ट और अमेजिंग है।",
+  "बिना किसी दबाव के सही सलाह देना और असली प्रोडक्ट उपलब्ध कराना {name} की सबसे बड़ी ताकत है।",
+  "जितनी तारीफ की जाए कम है! {city} में {name} का काम सचमुच गर्व करने लायक और अमेजिंग है।",
+  "जब भी {city} में किसी को अमेजिंग {product} की जरूरत होती है, मैं सिर्फ {name} का ही नाम लेता हूँ।",
   "समय पर काम और ग्राहक के सम्मान का बेहतरीन संतुलन {name} में देखने को मिलता है।",
-  "आधुनिक सुविधाएं और बहुत ही शालीन स्टाफ! {name} का अनुभव हमेशा याद रहेगा।",
-  "एक संतुष्ट ग्राहक के रूप में मैं {name} की सेवाओं से 100% प्रसन्न हूँ।"
+  "आधुनिक सुविधाएं और बहुत ही शालीन स्टाफ! {city} में {name} का अनुभव हमेशा याद रहेगा।",
+  "एक संतुष्ट ग्राहक के रूप में मैं {city} में {name} की सेवाओं से 100% प्रसन्न हूँ।"
 ];
 
 const HI_MED_ENDS = [
-  "इन्होंने मेरी जरूरत को समझा और बजट में सबसे बढ़िया विकल्प दिया। 5 स्टार दिल से!",
+  "इन्होंने मेरी जरूरत को समझा और बजट में सबसे बढ़िया अमेजिंग विकल्प दिया। 5 स्टार दिल से!",
   "स्टाफ बहुत ही अनुशासित और नम्र है। किसी भी काम के लिए बार-बार नहीं कहना पड़ा।",
-  "डिलीवरी बिल्कुल समय पर मिली और फिनिशिंग उम्मीद से बेहतर रही। बहुत-बहुत आभार!",
-  "क्वालिटी में कोई समझौता नहीं और बिलिंग भी पूरी तरह पारदर्शी। जरूर पधारें!",
-  "इनकी विनम्रता और सेवा भाव देखकर दिल खुश हो जाता है। 10/10 अनुभव!",
+  "डिलीवरी बिल्कुल समय पर मिली और फिनिशिंग उम्मीद से बेहतर रही। {city} में बहुत-बहुत आभार!",
+  "क्वालिटी में कोई समझौता नहीं और बिलिंग भी पूरी तरह पारदर्शी। {city} में जरूर पधारें!",
+  "इनकी विनम्रता और सेवा भाव देखकर दिल खुश हो जाता है। 10/10 अमेजिंग अनुभव!",
   "पूरा स्टाफ बहुत ही कोऑपरेटिव है और हर सवाल का तसल्ली से जवाब देता है।",
-  "{city} में ऐसा सच्चा और विश्वसनीय प्रतिष्ठान मिलना वाकई सुकून देता है।",
-  "काम की बारीकियों पर इनका ध्यान देना ही इन्हें बाकी सबसे अलग और श्रेष्ठ बनाता है।",
+  "{city} में ऐसा सच्चा, अमेजिंग और विश्वसनीय प्रतिष्ठान मिलना वाकई सुकून देता है।",
+  "काम की बारीकियों पर इनका ध्यान देना ही इन्हें {city} में बाकी सबसे अलग और श्रेष्ठ बनाता है।",
   "आफ्टर-सेल्स सर्विस भी उतनी ही त्वरित और मददगार है। बहुत-बहुत धन्यवाद!",
-  "हर किसी को मेरी तरफ से {name} की पुरजोर सिफारिश है। 5/5 स्टार्स!",
+  "पूरे {city} में हर किसी को मेरी तरफ से {name} की पुरजोर सिफारिश है। 5/5 स्टार्स!",
   "ग्राहकों के प्रति इनका आदर भाव वाकई दिल को छू लेने वाला है।",
-  "बिल्कुल झंझट-मुक्त प्रक्रिया और उच्च गुणवत्ता की गारंटी। शानदार टीम!",
+  "बिल्कुल झंझट-मुक्त प्रक्रिया और उच्च गुणवत्ता की अमेजिंग गारंटी। शानदार टीम!",
   "मूल्यवान मार्गदर्शन और तुरंत सेवा के लिए {name} की पूरी टीम का आभार।",
-  "अगर आप शांति और सर्वोत्तम क्वालिटी चाहते हैं, तो {name} ही आपका सही ठिकाना है।",
-  "उत्कृष्ट सेवा स्तर बनाए रखने के लिए पूरी टीम को बहुत-बहुत बधाई!"
+  "अगर आप {city} में शांति और अमेजिंग क्वालिटी चाहते हैं, तो {name} ही आपका सही ठिकाना है।",
+  "उत्कृष्ट सेवा स्तर बनाए रखने के लिए {city} की {name} टीम को बहुत-बहुत बधाई!"
 ];
 
 // Format 3: Detailed Story & Complete Experience (3-4 sentences)
@@ -657,7 +665,9 @@ const HI_DET_STARTS = [
   "जब आप {name} में कदम रखते हैं, तो आपको महसूस होता है कि आप बिल्कुल सही और सुरक्षित हाथों में हैं।",
   "{product} की बुकिंग से लेकर फाइनल डिलीवरी तक हर स्टेप पर इनका फॉलो-अप बहुत ही प्रशंसनीय रहा।",
   "स्थानीय स्तर पर {city} में इतने उच्च मानकों के साथ काम करने वाला संस्थान देखना बहुत सुखद लगता है।",
-  "{name} केवल सामान नहीं बेचते, बल्कि ग्राहक के साथ एक मजबूत और सच्चा रिश्ता बनाते हैं।"
+  "{name} केवल सामान नहीं बेचते, बल्कि ग्राहक के साथ एक मजबूत और सच्चा रिश्ता बनाते हैं।",
+  "पूरे {city} में {product} के लिए {name} से बेहतर और अमेजिंग जगह मिलना नामुमकिन है, मेरा अनुभव 100% संतोषजनक रहा।",
+  "काफी खोजबीन के बाद {city} में {name} को चुना, और इनका अमेजिंग काम देखकर पूरा पैसा वसूल महसूस हुआ।"
 ];
 
 const HI_DET_ENDS = [
@@ -674,96 +684,98 @@ const HI_DET_ENDS = [
   "आधुनिक उपकरण, पेशेवर माहौल और बहुत ही शालीन टीम। {city} में {product} के लिए इनसे बेहतर कोई और विकल्प हो ही नहीं सकता। फाइव स्टार्स!",
   "शुरुआत से लेकर डिलीवरी तक सब कुछ पारदर्शी और सहज रहा। हमें एक मूल्यवान ग्राहक की तरह महसूस कराया गया। {name} की टीम को बहुत-बहुत साधुवाद!",
   "काम में सफाई, बात में सच्चाई और दाम में पूरी ईमानदारी। आज के दौर में ऐसा अनुभव मिलना किसी वरदान से कम नहीं। 100% रिकमेंडेड!",
-  "उत्कृष्ट कार्यप्रणाली, विनम्र स्वभाव और दीर्घकालिक विश्वसनीयता। जब भी जरूरत होगी, हम केवल {name} ही आएंगे। 5/5 स्टार्स!"
+  "उत्कृष्ट कार्यप्रणाली, विनम्र स्वभाव और दीर्घकालिक विश्वसनीयता। जब भी जरूरत होगी, हम केवल {name} ही आएंगे। 5/5 स्टार्स!",
+  "{city} में इतनी अमेजिंग क्वालिटी, साफ-सुथरा काम और विनम्र व्यवहार मिलना बहुत सुखद है। मेरी तरफ से {name} को दिल से 5 स्टार्स!"
 ];
 
 // ==================== GUJARATI (3 DISTINCT FORMAT TIERS) ====================
 // Format 1: Short & Punchy (1-2 sentences)
 const GU_SHORT_STARTS = [
-  "{city} માં {product} માટે {name} સૌથી ઉત્તમ જગ્યા છે!",
-  "અદ્ભુત ક્વોલિટી અને વાજબી ભાવ! {name} ખાતે {product} નો અનુભવ ખૂબ સરસ રહ્યો.",
-  "ઝડપી સર્વિસ અને એકદમ નમ્ર સ્ટાફ! {name} નું કામ ખરેખર દિલ જીતી લે તેવું છે.",
-  "દિલથી 5 સ્ટાર્સ! {name} ખાતે {product} જોઈને મન પ્રસન્ન થઈ ગયું.",
+  "{city} માં {product} માટે {name} સૌથી અમેઝિંગ અને બેસ્ટ જગ્યા છે!",
+  "અમેઝિંગ સર્વિસ, ઉત્કૃષ્ટ ક્વોલિટી અને એકદમ વાજબી ભાવ! {name} ખાતે {product} નો અનુભવ અદ્ભુત રહ્યો.",
+  "{city} માં {name} જેવું અમેઝિંગ કામ અને નમ્ર સ્ટાફ જોઈને મન પ્રસન્ન થઈ ગયું.",
+  "દિલથી 5 સ્ટાર્સ! {city} માં {name} ખાતે {product} જોઈને આનંદ થયો.",
   "{name} માં {product} ની ક્વોલિટી જોઈને હું ખૂબ પ્રભાવિત થયો છું.",
-  "કોઈપણ સંકોચ વગર 10 માંથી 10 રેટીંગ! {city} માં {name} સાચે જ નંબર 1 છે.",
-  "સુપર ફાસ્ટ સર્વિસ અને 100% અસલ {product}! ખૂબ ખૂબ આભાર.",
+  "કોઈપણ સંકોચ વગર 10 માંથી 10 રેટીંગ! {city} માં {name} સાચે જ નંબર 1 અને અમેઝિંગ છે.",
+  "સુપર ફાસ્ટ સર્વિસ અને 100% અસલ {product}! {city} માં દિલ જીતી લીધું.",
   "સંપૂર્ણ સંતોષકારક ખરીદી! {name} ખાતેથી {product} લઈને પૂરો પૈસા વસૂલ થયો.",
-  "{city} માં {product} માટે સૌથી વિશ્વસનીય સરનામું એટલે {name}.",
+  "{city} માં {product} માટે સૌથી અમેઝિંગ અને વિશ્વસનીય સરનામું એટલે {name}.",
   "પ્રમાણિક માણસો અને ઉત્તમ પરિણામ! {name} નો અનુભવ અવિસ્મરણીય રહ્યો.",
-  "સમયની પાબંદી અને ચોખ્ખું કામ! {name} ની કામગીરી ખૂબ સરાહનીય છે.",
+  "સમયની પાબંદી અને ચોખ્ખું કામ! {city} માં {name} ની કામગીરી ખૂબ અમેઝિંગ છે.",
   "સાચું માર્ગદર્શન અને વાજબી દર! {name} ની ટીમ ખરેખર મદદરૂપ છે.",
   "પહેલી જ મુલાકાતમાં પૂરો વિશ્વાસ જીતી લીધો! બહુ જ સરસ સર્વિસ.",
-  "{city} માં આટલો સારો વ્યવહાર અને ગુણવત્તા મળવી મુશ્કેલ છે.",
+  "{city} માં આટલો સારો વ્યવહાર, અમેઝિંગ માહોલ અને ગુણવત્તા મળવી ખૂબ સુખદ છે.",
+  "આપણા {city} માં {name} જેવી અમેઝિંગ અને પ્રમાણિક સેવા ઉપલબ્ધ હોવી એ ગૌરવની વાત છે.",
   "ઉમદા સેવા અને આદરપૂર્વક વર્તન માટે {name} ને પૂરેપૂરા 5 સ્ટાર!"
 ];
 
 const GU_SHORT_ENDS = [
   "સ્ટાફનું વર્તન ખૂબ જ મીઠું, નમ્ર અને મદદરૂપ છે. 10/10!",
   "કામ સંપૂર્ણ પ્રમાણિકતા અને સફાઈ સાથે પૂરું કર્યું. 5 સ્ટાર્સ!",
-  "દરેક મિત્રો અને સ્નેહીઓને અહીં આવવાની નમ્ર ભલામણ કરું છું!",
-  "એક એક રૂપિયાનું પૂરેપૂરું વળતર! ખૂબ ખૂબ આભાર {name} ટીમ.",
+  "સમગ્ર {city} માં બધાને અહીં આવવાની મારી અમેઝિંગ ભલામણ છે!",
+  "એક એક રૂપિયાનું પૂરેપૂરું વળતર! {city} માં ખૂબ ખૂબ આભાર {name} ટીમ.",
   "ભવિષ્યમાં પણ હું અહીં જ આવીશ. કીપ ઈટ અપ!",
   "પારદર્શક બિલિંગ અને કોઈ છુપા ચાર્જ વગર ચોખ્ખો વ્યવહાર. 5/5!",
-  "ઓછા સમયમાં ઉત્કૃષ્ટ પરિણામ આપવા બદલ ધન્યવાદ.",
+  "ઓછા સમયમાં આટલું અમેઝિંગ પરિણામ આપવા બદલ આભાર!",
   "{city} માં દરેક ગ્રાહકે {name} ની અચૂક મુલાકાત લેવી જોઈએ.",
   "સાચી સલાહ અને શ્રેષ્ઠ ગુણવત્તાની ખાતરી. દિલથી આભાર!",
   "જરાય સંકોચ વગર 100% રેકોમેન્ડેડ!",
-  "ગ્રાહકનો સંતોષ જ એમની પ્રથમ પ્રાથમિકતા છે.",
-  "અદ્ભુત અનુભવ, 5 સ્ટાર રેટીંગને સંપૂર્ણ હકદાર!"
+  "આપણા {city} માટે {name} એક અમેઝિંગ સંપત્તિ છે. 10/10!",
+  "{city} માં સાચે જ અમેઝિંગ અને 5-સ્ટાર અનુભવ, પૂરેપૂરો હકદાર!"
 ];
 
 // Format 2: Medium / Recommendation / Gratitude (2-3 sentences)
 const GU_MED_STARTS = [
-  "જો તમે {city} માં સાચું અને ટકાઉ {product} શોધી રહ્યા હોવ, તો {name} સૌથી શ્રેષ્ઠ વિકલ્પ છે.",
-  "{name} ની સમગ્ર ટીમનો ખૂબ ખૂબ આભાર! {product} બાબતે એમણે જે ધીરજથી સમજાવ્યું તે પ્રશંસનીય છે.",
-  "ઘણી તપાસ કર્યા પછી અમે {name} ની પસંદગી કરી અને એમણે અમને જરાય નિરાશ ન કર્યા.",
-  "મારા મિત્રની ભલામણથી હું {name} ગયો હતો અને {product} ની ક્વોલિટી જોઈને ખૂબ આનંદ થયો.",
+  "જો તમે {city} માં સાચું, ટકાઉ અને અમેઝિંગ {product} શોધી રહ્યા હોવ, તો {name} સૌથી શ્રેષ્ઠ વિકલ્પ છે.",
+  "{name} ની સમગ્ર ટીમનો ખૂબ ખૂબ આભાર! {city} માં {product} બાબતે એમણે જે ધીરજથી સમજાવ્યું તે અમેઝિંગ છે.",
+  "ઘણી તપાસ કર્યા પછી અમે {city} માં {name} ની પસંદગી કરી અને એમનું અમેઝિંગ કામ જોઈને ખૂબ સંતોષ થયો.",
+  "મારા મિત્રની ભલામણથી હું {name} ગયો હતો અને {city} માં {product} ની અમેઝિંગ ક્વોલિટી જોઈને દંગ રહી ગયો.",
   "પ્રમાણિક વ્યવહાર અને વ્યાજબી કિંમત માટે {city} માં {name} ની આગવી પ્રતિષ્ઠા છે.",
-  "પરિવાર સાથે {name} ની મુલાકાત લીધી હતી, {product} માટે એમણે ખૂબ સુંદર સપોર્ટ આપ્યો.",
-  "બજારમાં ઘણા વિકલ્પો છે, પણ {name} જેવી ચોખ્ખાઈ અને પારદર્શિતા ક્યાંય જોવા નથી મળતી.",
+  "પરિવાર સાથે {name} ની મુલાકાત લીધી હતી, {city} માં {product} માટે એમણે ખૂબ જ અમેઝિંગ સપોર્ટ આપ્યો.",
+  "બજારમાં ઘણા વિકલ્પો છે, પણ {city} માં {name} જેવી ચોખ્ખાઈ, પ્રામાણિકતા અને સર્વિસ ક્યાંય જોવા નથી મળતી.",
   "{product} ને લગતી દરેક નાની-મોટી બાબત {name} ની ટીમે ખૂબ સરળતાથી સ્પષ્ટ કરી.",
-  "ઉત્તમ સેવા અને પારિવારિક વાતાવરણ માટે આભાર {name}! {product} ની ક્વોલિટી પરફેક્ટ છે.",
+  "ઉત્તમ સેવા અને પારિવારિક વાતાવરણ માટે આભાર {name}! {city} માં {product} ની ક્વોલિટી એકદમ અમેઝિંગ છે.",
   "ગ્રાહક પર દબાણ કર્યા વિના સાચો માર્ગ બતાવવો એ એમની સૌથી મોટી ખૂબી છે.",
-  "જેટલા વખાણ કરીએ તેટલા ઓછા છે! {city} માં {name} નું કામ ખરેખર ગૌરવ લેવા જેવું છે.",
-  "જ્યારે પણ કોઈ {city} માં {product} વિશે પૂછે છે, ત્યારે હું ફક્ત {name} નું જ નામ આપું છું.",
+  "જેટલા વખાણ કરીએ તેટલા ઓછા છે! {city} માં {name} નું કામ ખરેખર ગૌરવ લેવા જેવું અને અમેઝિંગ છે.",
+  "જ્યારે પણ કોઈ {city} માં અમેઝિંગ {product} વિશે પૂછે છે, ત્યારે હું ફક્ત {name} નું જ નામ આપું છું.",
   "સમયસર કામ અને ગ્રાહકના સન્માનનો અનોખો સમન્વય {name} માં જોવા મળે છે.",
-  "આધુનિક સુવિધા અને સંસ્કારી સ્ટાફ! {name} નો અનુભવ હંમેશા યાદ રહેશે.",
-  "એક સંતુષ્ટ ગ્રાહક તરીકે હું {name} ની તમામ સેવાઓથી 100% ખુશ છું."
+  "આધુનિક સુવિધા અને સંસ્કારી સ્ટાફ! {city} માં {name} નો અનુભવ હંમેશા યાદ રહેશે.",
+  "એક સંતુષ્ટ ગ્રાહક તરીકે હું {city} માં {name} ની તમામ સેવાઓથી 100% ખુશ છું."
 ];
 
 const GU_MED_ENDS = [
-  "તેમણે મારી જરૂરિયાત સમજીને બજેટમાં શ્રેષ્ઠ વિકલ્પ આપ્યો. દિલથી 5 સ્ટાર્સ!",
+  "તેમણે મારી જરૂરિયાત સમજીને બજેટમાં સૌથી અમેઝિંગ વિકલ્પ આપ્યો. દિલથી 5 સ્ટાર્સ!",
   "સ્ટાફ ખૂબ જ તાલીમબદ્ધ અને વિવેકી છે. કોઈ વાત માટે વારંવાર કહેવું ન પડ્યું.",
-  "સમયસર ડિલિવરી મળી અને ફિનિશિંગ અપેક્ષા કરતાં પણ સરસ રહી. ખૂબ આભાર!",
-  "ગુણવત્તામાં કોઈ સમાધાન નહીં અને બિલિંગ પણ સંપૂર્ણ ચોખ્ખું. જરૂર મુલાકાત લો!",
-  "એમનો મિલનસાર સ્વભાવ જોઈને મન પ્રફુલ્લિત થઈ ગયું. 10/10 અનુભવ!",
+  "સમયસર ડિલિવરી મળી અને ફિનિશિંગ અપેક્ષા કરતાં પણ સરસ રહી. {city} માં ખૂબ આભાર!",
+  "ગુણવત્તામાં કોઈ સમાધાન નહીં અને બિલિંગ પણ સંપૂર્ણ ચોખ્ખું. {city} માં જરૂર મુલાકાત લો!",
+  "એમનો મિલનસાર સ્વભાવ જોઈને મન પ્રફુલ્લિત થઈ ગયું. 10/10 અમેઝિંગ અનુભવ!",
   "આખી ટીમ ખૂબ સહકારી છે અને દરેક સવાલનો શાંતિથી સંતોષકારક જવાબ આપે છે.",
-  "{city} માં આવો ભરોસાપાત્ર અને સાચો વેપારી મળવો એ સાચે જ રાહતરૂપ છે.",
-  "કામની નાની વિગતો પર એમનું લક્ષ્ય જ એમને અન્યો કરતાં આગળ રાખે છે.",
+  "{city} માં આવો ભરોસાપાત્ર, અમેઝિંગ અને સાચો વેપારી મળવો એ સાચે જ રાહતરૂપ છે.",
+  "કામની નાની વિગતો પર એમનું લક્ષ્ય જ એમને {city} માં અન્યો કરતાં આગળ રાખે છે.",
   "વેચાણ પછીની સર્વિસ પણ એટલી જ ત્વરિત અને ઉપયોગી રહી. થેન્ક યુ!",
-  "દરેક વ્યક્તિને મારી તરફથી {name} ની દિલથી ભલામણ છે. 5/5 સ્ટાર્સ!",
+  "સમગ્ર {city} માં દરેક વ્યક્તિને મારી તરફથી {name} ની દિલથી ભલામણ છે. 5/5 સ્ટાર્સ!",
   "ગ્રાહકો પ્રત્યેનો એમનો આદરભાવ સાચે જ હૃદયસ્પર્શી છે.",
-  "જરાય મુશ્કેલી વગર સરળ પ્રક્રિયા અને ઉત્તમ પરિણામ. શાનદાર ટીમ!",
+  "જરાય મુશ્કેલી વગર સરળ પ્રક્રિયા અને ઉત્તમ પરિણામ. શાનદાર અને અમેઝિંગ ટીમ!",
   "સાચું માર્ગદર્શન અને ઝડપી સેવા આપવા બદલ {name} નો ખૂબ ખૂબ આભાર.",
-  "જો તમારે શાંતિ અને શ્રેષ્ઠ ગુણવત્તા જોઈતી હોય, તો {name} જ સાચું સ્થળ છે.",
-  "આવો ઉત્તમ સેવા દરજ્જો જાળવી રાખવા બદલ સમગ્ર ટીમને અભિનંદન!"
+  "જો તમારે {city} માં શાંતિ અને અમેઝિંગ ગુણવત્તા જોઈતી હોય, તો {name} જ સાચું સ્થળ છે.",
+  "આવો ઉત્તમ સેવા દરજ્જો જાળવી રાખવા બદલ સમગ્ર {city} ની {name} ટીમને અભિનંદન!"
 ];
 
 // Format 3: Detailed Story & Complete Experience (3-4 sentences)
 const GU_DET_STARTS = [
-  "હું ઘણા સમયથી {city} માં સારા અને ટકાઉ {product} ની શોધમાં હતો અને અંતે {name} ખાતે મારી શોધ પૂરી થઈ.",
-  "તાજેતરમાં {name} ખાતે {product} ના કામે જવાનું થયું, અને શરૂઆતથી અંત સુધીનો અનુભવ ખૂબ વ્યવસ્થિત રહ્યો.",
-  "બીજી જગ્યાઓના કડવા અનુભવો પછી જ્યારે હું {name} પહોંચ્યો, ત્યારે એમનું વાતાવરણ જોઈને ઘણી શાંતિ થઈ.",
+  "હું ઘણા સમયથી {city} માં સારા, ટકાઉ અને અમેઝિંગ {product} ની શોધમાં હતો અને અંતે {name} ખાતે મારી શોધ પૂરી થઈ.",
+  "તાજેતરમાં {name} ખાતે {product} ના કામે જવાનું થયું, અને સમગ્ર {city} માં આવો સુવ્યવસ્થિત અનુભવ પ્રથમ વાર થયો.",
+  "બીજી જગ્યાઓના કડવા અનુભવો પછી જ્યારે હું {city} માં {name} પહોંચ્યો, ત્યારે એમનો અમેઝિંગ માહોલ જોઈને ઘણી શાંતિ થઈ.",
   "અમે અમારા સમગ્ર પરિવાર માટે {name} ખાતેથી {product} નું કામ કરાવ્યું અને પરિણામ જોઈને બધા ખુશ થઈ ગયા.",
   "પ્રથમ વખત {name} ની સેવા લીધી હતી, પણ જે ઝડપથી એમણે અમારું કામ સંભાળ્યું તે ખરેખર પ્રશંસનીય છે.",
   "અમારે તાત્કાલિક જરૂરિયાતમાં {product} જોઈતું હતું અને {name} એ કોઈપણ વિલંબ વગર ત્વરિત ઉકેલ કરી આપ્યો.",
-  "બજારમાં ભાવ અને ક્વોલિટી સરખાવ્યા પછી મેં {name} પસંદ કર્યું અને મારો આ નિર્ણય 100% સાચો સાબિત થયો.",
-  "{city} માં {name} ની ઘણી નામના સાંભળી હતી અને રૂબરૂ ગયા પછી ખ્યાલ આવ્યો કે એમની શાખ સાચી છે.",
+  "{city} માં ઘણી જગ્યાએ ભાવ અને ક્વોલિટી સરખાવ્યા પછી મેં {name} પસંદ કર્યું અને મારો આ નિર્ણય 100% સાચો સાબિત થયો.",
+  "{city} માં {name} ની ઘણી નામના સાંભળી હતી અને રૂબરૂ ગયા પછી ખ્યાલ આવ્યો કે એમની શાખ સાચે જ અમેઝિંગ છે.",
   "{product} વિશે મને ખાસ ટેકનિકલ જાણકારી નહોતી, પણ {name} ની ટીમે દરેક વિગત સરળ ભાષામાં સમજાવી.",
   "{name} માં સ્વચ્છતા, કામ કરવાની પદ્ધતિ અને પ્રોફેશનલ અભિગમ ખૂબ જ આદર્શ કક્ષાનો છે.",
   "જ્યારે તમે {name} માં પ્રવેશો છો ત્યારે જ તમને અનુભવાય છે કે તમે એકદમ સુરક્ષિત અને સાચા હાથમાં છો.",
   "{product} ના બુકિંગથી લઈને ડિલિવરી સુધી દરેક પગલે એમનો ફોલો-અપ અદ્ભુત રહ્યો.",
-  "સ્થાનિક સ્તરે {city} માં આવા ઉચ્ચ ધોરણો સાથે કામ કરતી સંસ્થા જોવી એ ખૂબ ગર્વની વાત છે.",
+  "સ્થાનિક સ્તરે {city} માં આવા ઉચ્ચ ધોરણો અને અમેઝિંગ ક્વોલિટી સાથે કામ કરતી સંસ્થા જોવી એ ખૂબ ગર્વની વાત છે.",
   "{name} ફક્ત માલસામાન નથી વેચતા, પરંતુ ગ્રાહક સાથે એક કાયમી અને વિશ્વાસપાત્ર સંબંધ બાંધે છે."
 ];
 
@@ -772,15 +784,15 @@ const GU_DET_ENDS = [
   "સમગ્ર ટીમ ખૂબ વિવેકી, સુશિક્ષિત અને પોતાના કામમાં નિષ્ણાત છે. પરિસર સ્વચ્છ છે અને સમયપાલન પૂરેપૂરું છે. હું મારા તમામ સ્નેહીઓને {name} ની ભલામણ કરીશ!",
   "આપેલા સમય પહેલા કામ પૂરું થયું અને {product} નું ફિનિશિંગ એટલું સુંદર છે કે દરેક જણ વખાણ કરે છે. સ્ટાફના મીઠા બોલે દિવસ બનાવી દીધો. 10/10 અનુભવ!",
   "બિલિંગ સંપૂર્ણ કોમ્પ્યુટરાઈઝ્ડ અને પારદર્શક રહ્યું. તેમણે અમારું બજેટ ધ્યાનમાં રાખીને વધારાનો ખર્ચ ન થવા દીધો. આવો સાચો વ્યવહાર આજના યુગમાં દુર્લભ છે!",
-  "વોટ્સએપ અને ફોન પર તુરંત રિસ્પોન્સ મળ્યો અને અમારી દરેક નાની પસંદગીનું પૂરું ધ્યાન રખાયું. એમનો સહયોગ સાચે જ પ્રશંસનીય રહ્યો. દરેકને મુલાકાત લેવા વિનંતી!",
+  "વોટ્સએપ અને ફોન પર તુરંત રિસ્પોન્સ મળ્યો અને અમારી દરેક નાની પસંદગીનું પૂરું ધ્યાન રખાયું. એમનો સહયોગ સાચે જ પ્રશંસનીય રહ્યો. {city} ના દરેક નાગરિકને મુલાકાત લેવા વિનંતી!",
   "કામની મજબૂતી જોઈને સાફ ખ્યાલ આવે છે કે તેઓ ફક્ત ઓરિજિનલ ક્વોલિટીમાં જ કામ કરે છે. સ્ટાફનો આદરપૂર્વક દ્રષ્ટિકોણ ખૂબ ગમ્યો. ધન્યવાદ {name}!",
   "કોઈ રકઝક વગર વાજબી ભાવ અને પ્રથમ વર્ગની સર્વિસ! કોઈ પ્રશ્નનો જવાબ આપવામાં એમણે ક્યારેય અણગમો ન દાખવ્યો. ખૂબ જ સંતોષકારક અનુભવ!",
   "દરેક કર્મચારીએ પોતાની પૂરી જવાબદારી નિભાવી. ડિલિવરી પછી પણ એમણે ફોન કરીને સંતોષની ખાતરી કરી. આવી આફ્ટર-સેલ્સ સર્વિસ જોઈને ઘણો આનંદ થયો!",
   "તેમણે ધારેલા કરતાં ઘણું ઉત્કૃષ્ટ પરિણામ આપ્યું. એમના કામમાં પ્રામાણિકતા સાફ દેખાય છે. {name} ને ભવિષ્ય માટે ખૂબ શુભેચ્છાઓ અને પૂરા 5 સિતારા!",
   "ગ્રાહકની સુવિધાને સર્વોપરી રાખવી એ એમની મુખ્ય વિશેષતા છે. સાચું માર્ગદર્શન, નિયત સમય અને ઉત્તમ સંતોષ. કીપ અપ ધ વન્ડરફુલ વર્ક!",
-  "આધુનિક સાધનો, વ્યવસાયિક માહોલ અને નમ્ર ટીમ. {city} માં {product} માટે આનાથી સારો બીજો કોઈ વિકલ્પ હોઈ જ ન શકે. ફાઈવ સ્ટાર્સ!",
+  "આધુનિક સાધનો, અમેઝિંગ માહોલ અને નમ્ર ટીમ. {city} માં {product} માટે આનાથી સારો બીજો કોઈ વિકલ્પ હોઈ જ ન શકે. ફાઈવ સ્ટાર્સ!",
   "શરૂઆતથી ડિલિવરી સુધી બધું જ પારદર્શક અને સરળ રહ્યું. અમને એક માનવંતા ગ્રાહક તરીકે આવકારવામાં આવ્યા. {name} ની ટીમને ખૂબ ખૂબ અભિનંદન!",
-  "કામમાં સફાઈ, વાતમાં સચ્ચાઈ અને ભાવમાં પૂરી પ્રામાણિકતા. આજના સમયમાં આવો અનુભવ મળવો એ મોટી ઉપલબ્ધિ છે. 100% રેકોમેન્ડેડ!",
+  "કામમાં સફાઈ, વાતમાં સચ્ચાઈ અને ભાવમાં પૂરી પ્રામાણિકતા. {city} માં આવો અમેઝિંગ અનુભવ મળવો એ મોટી ઉપલબ્ધિ છે. 100% રેકોમેન્ડેડ!",
   "ઉત્કૃષ્ટ કાર્યપદ્ધતિ, વિવેકી સ્વભાવ અને લાંબાગાળાની વિશ્વસનીયતા. જ્યારે પણ જરૂર પડશે, અમે ફક્ત {name} જ આવીશું. 5/5 સ્ટાર્સ!"
 ];
 
@@ -825,7 +837,8 @@ export function pickReviewTemplates(
   const catKey = (client.category && INDUSTRY_CATALOG[client.category]) ? client.category : 'general';
   const categoryInfo = INDUSTRY_CATALOG[catKey] || INDUSTRY_CATALOG.general;
   const name = client.name || "Business";
-  const city = client.city || "City";
+  const city = client.city && client.city.trim() ? client.city.trim() : "";
+  const hasCity = Boolean(city);
 
   let productWording = selectedProduct;
   if (!productWording) {
@@ -846,7 +859,7 @@ export function pickReviewTemplates(
       if (excludedSet.size === 0) return true;
       const preview = t
         .replace(/{name}/g, name)
-        .replace(/{city}/g, city)
+        .replace(/{city}/g, city || 'City')
         .replace(/{product}/g, productWording || '')
         .replace(/\s+/g, ' ')
         .trim();
@@ -858,16 +871,24 @@ export function pickReviewTemplates(
   const availableMed = filterPool(pool.medium);
   const availableDet = filterPool(pool.detailed);
 
-  const pickRandom = (arr: string[], fallbackArr: string[]) => {
+  // If client has a specific city configured, prioritize templates that explicitly showcase {city}
+  const pickPrioritizingCity = (arr: string[], fallbackArr: string[]) => {
     const source = arr.length > 0 ? arr : fallbackArr;
+    if (hasCity) {
+      const cityTemplates = source.filter(t => t.includes('{city}'));
+      if (cityTemplates.length > 0) {
+        return cityTemplates[Math.floor(Math.random() * cityTemplates.length)];
+      }
+    }
     return source[Math.floor(Math.random() * source.length)];
   };
 
   // Select 3 completely different format archetypes (Short, Medium, Detailed)
+  // Each tier will strongly highlight the client's city and amazing service!
   return [
-    pickRandom(availableShort, pool.short),
-    pickRandom(availableMed, pool.medium),
-    pickRandom(availableDet, pool.detailed)
+    pickPrioritizingCity(availableShort, pool.short),
+    pickPrioritizingCity(availableMed, pool.medium),
+    pickPrioritizingCity(availableDet, pool.detailed)
   ];
 }
 
@@ -880,7 +901,7 @@ export function renderReviewFromTemplate(
   const catKey = (client.category && INDUSTRY_CATALOG[client.category]) ? client.category : 'general';
   const categoryInfo = INDUSTRY_CATALOG[catKey] || INDUSTRY_CATALOG.general;
   const name = client.name || "Business";
-  const city = client.city || "City";
+  const city = client.city && client.city.trim() ? client.city.trim() : "";
   const person = client.person_name ? client.person_name.trim() : "";
 
   let productWording = selectedProduct;
@@ -893,9 +914,36 @@ export function renderReviewFromTemplate(
     }
   }
 
-  let text = template
+  let text = template;
+
+  if (city) {
+    text = text.replace(/{city}/g, city);
+  } else {
+    // If no city was configured when adding client, gracefully replace city tags with smooth natural words
+    if (lang === 'en') {
+      text = text
+        .replace(/in our city {city}/gi, 'in our area')
+        .replace(/for our city {city}/gi, 'for our city')
+        .replace(/across {city}/gi, 'across the city')
+        .replace(/in {city}/gi, 'locally')
+        .replace(/{city}/g, 'our city');
+    } else if (lang === 'hi') {
+      text = text
+        .replace(/हमारे {city} में/g, 'हमारे शहर में')
+        .replace(/{city} के अंदर/g, 'शहर के अंदर')
+        .replace(/{city} में/g, 'शहर में')
+        .replace(/{city}/g, 'शहर');
+    } else if (lang === 'gu') {
+      text = text
+        .replace(/આપણા {city} માં/g, 'આપણા શહેરમાં')
+        .replace(/સમગ્ર {city} માં/g, 'સમગ્ર શહેરમાં')
+        .replace(/{city} માં/g, 'શહેરમાં')
+        .replace(/{city}/g, 'શહેર');
+    }
+  }
+
+  text = text
     .replace(/{name}/g, name)
-    .replace(/{city}/g, city)
     .replace(/{product}/g, productWording || '')
     .replace(/\s+/g, ' ')
     .trim();

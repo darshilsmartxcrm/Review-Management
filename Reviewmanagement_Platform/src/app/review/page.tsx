@@ -270,7 +270,7 @@ function ReviewFunnelContent() {
       const templates = pickReviewTemplates(lang, client, selectedProduct, usedReviews);
       setActiveTemplates(templates);
     }
-  }, [client?.id, client?.name, client?.category, client?.keywords, lang, rating, selectedProduct]);
+  }, [client?.id, client?.name, client?.city, client?.category, client?.keywords, lang, rating, selectedProduct]);
 
   // Render generatedOptions whenever templates, selectedProduct, client, or lang changes
   // When user selects a product chip/point, the same templates stay steady and only the keyword updates (no unwanted shuffle!)
