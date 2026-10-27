@@ -110,29 +110,39 @@ function StandeeContent() {
 
     const targetId = idParam || initialClient.id;
     if (targetId) {
-      fetch(`${API_BASE_URL}/api/clients?id=${encodeURIComponent(targetId)}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data && data.success && data.client) {
-            setClient((prev) => {
-              if (nameParam || phoneParam) {
-                return {
-                  ...data.client,
-                  name: nameParam || prev.name,
-                  phone: phoneParam ? formatWhatsAppPhone(phoneParam) : prev.phone,
-                  city: cityParam || prev.city || data.client.city,
-                  category: (catParam as any) || prev.category || data.client.category,
-                  person_name: pnParam || prev.person_name || data.client.person_name,
-                  keywords: kParam || prev.keywords || data.client.keywords,
-                  google_url: gParam || prev.google_url || data.client.google_url,
-                  default_lang: (langParam as any) || prev.default_lang || data.client.default_lang,
-                };
-              }
-              return data.client;
-            });
+      const loadStandeeClient = async () => {
+        let fetchedData: any = null;
+        try {
+          const res = await fetch(`/api/clients?id=${encodeURIComponent(targetId)}`);
+          if (res.ok) fetchedData = await res.json();
+        } catch {}
+
+        if (!fetchedData || !fetchedData.success || !fetchedData.client) {
+          if (API_BASE_URL && !API_BASE_URL.includes('localhost') && !API_BASE_URL.includes('127.0.0.1')) {
+            try {
+              const res = await fetch(`${API_BASE_URL}/api/clients?id=${encodeURIComponent(targetId)}`);
+              if (res.ok) fetchedData = await res.json();
+            } catch {}
           }
-        })
-        .catch(() => {});
+        }
+
+        if (fetchedData && fetchedData.success && fetchedData.client) {
+          const remoteClient = fetchedData.client;
+          setClient((prev) => ({
+            ...remoteClient,
+            name: nameParam || remoteClient.name || prev.name,
+            phone: phoneParam ? formatWhatsAppPhone(phoneParam) : (remoteClient.phone || prev.phone),
+            city: cityParam || remoteClient.city || prev.city,
+            category: (catParam as any) || remoteClient.category || prev.category,
+            person_name: pnParam || remoteClient.person_name || prev.person_name,
+            keywords: kParam || remoteClient.keywords || prev.keywords,
+            google_url: gParam || remoteClient.google_url || prev.google_url,
+            default_lang: (langParam as any) || remoteClient.default_lang || prev.default_lang,
+          }));
+        }
+      };
+
+      loadStandeeClient();
     }
   }, [searchParams]);
 

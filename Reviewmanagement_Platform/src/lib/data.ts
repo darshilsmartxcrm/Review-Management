@@ -1028,39 +1028,114 @@ export function formatWhatsAppPhone(phone?: string, fallback: string = '91987654
   return cleaned || fallback.replace(/\D/g, '') || '919876543210';
 }
 
+export function isLocalOrPrivateNetwork(url: string): boolean {
+  if (!url) return false;
+  const lower = url.toLowerCase();
+  return (
+    lower.includes('localhost') ||
+    lower.includes('127.0.0.1') ||
+    lower.includes('0.0.0.0') ||
+    lower.includes('192.168.') ||
+    lower.includes('10.') ||
+    lower.includes('172.16.') ||
+    lower.includes('172.17.') ||
+    lower.includes('172.18.') ||
+    lower.includes('172.19.') ||
+    lower.includes('172.20.') ||
+    lower.includes('172.21.') ||
+    lower.includes('172.22.') ||
+    lower.includes('172.23.') ||
+    lower.includes('172.24.') ||
+    lower.includes('172.25.') ||
+    lower.includes('172.26.') ||
+    lower.includes('172.27.') ||
+    lower.includes('172.28.') ||
+    lower.includes('172.29.') ||
+    lower.includes('172.30.') ||
+    lower.includes('172.31.')
+  );
+}
+
+export function getPublicBaseUrl(baseUrl?: string): string {
+  // 1. If explicitly passed and is a verified public live URL, use it directly
+  if (baseUrl && baseUrl.trim()) {
+    const clean = baseUrl.trim().replace(/\/+$/, '');
+    if (!isLocalOrPrivateNetwork(clean)) {
+      return clean;
+    }
+  }
+
+  // 2. Check saved live domain configured in Settings / localStorage
+  if (typeof window !== 'undefined') {
+    try {
+      const savedDomain = localStorage.getItem('rgh_live_domain_v1');
+      if (savedDomain && savedDomain.trim() && !isLocalOrPrivateNetwork(savedDomain)) {
+        return savedDomain.trim().replace(/\/+$/, '');
+      }
+    } catch {}
+  }
+
+  // 3. Check NEXT_PUBLIC_APP_URL environment variable
+  if (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_APP_URL) {
+    const envUrl = process.env.NEXT_PUBLIC_APP_URL.trim().replace(/\/+$/, '');
+    if (envUrl && !isLocalOrPrivateNetwork(envUrl)) {
+      return envUrl;
+    }
+  }
+
+  // 4. If current browser window is running on a deployed live public domain (e.g. Vercel, Render, AWS, custom domain)
+  if (typeof window !== 'undefined' && window.location.origin) {
+    const currentOrigin = window.location.origin;
+    if (!isLocalOrPrivateNetwork(currentOrigin)) {
+      return currentOrigin;
+    }
+  }
+
+  // 5. Safe production fallback domain (Strictly NEVER localhost, NEVER 192.168.x.x WiFi IP!)
+  return 'https://reviewmanagement.smartxcrm.com';
+}
+
 export function buildClientReviewUrl(baseUrl: string, client?: Partial<Client> | null): string {
-  if (!client) return `${baseUrl.replace(/\/$/, '')}/review`;
-  const cleanBase = baseUrl.replace(/\/$/, '');
+  // For internal admin relative links where baseUrl is explicitly empty string '', keep relative
+  if (baseUrl === '') {
+    if (!client) return '/review';
+    const params = new URLSearchParams();
+    if (client.id) params.set('id', client.id);
+    if (client.name && client.name.trim()) params.set('n', client.name.trim());
+    return `/review?${params.toString()}`;
+  }
+
+  const cleanBase = getPublicBaseUrl(baseUrl);
+  if (!client) return `${cleanBase}/review`;
+
   const params = new URLSearchParams();
   if (client.id) params.set('id', client.id);
-  if (client.name && client.name.trim()) params.set('name', client.name.trim());
-  if (client.phone && client.phone.trim()) params.set('phone', formatWhatsAppPhone(client.phone));
-  if (client.city && client.city.trim()) params.set('city', client.city.trim());
-  if (client.category) params.set('cat', client.category);
-  if (client.person_name && client.person_name.trim()) params.set('pn', client.person_name.trim());
-  if (client.default_lang) params.set('lang', client.default_lang);
-  if (client.google_url && client.google_url.trim()) params.set('g', client.google_url.trim());
-  if (client.keywords && client.keywords.trim()) params.set('k', client.keywords.trim());
-  if (client.start_date) params.set('sd', client.start_date);
-  if (client.expiry_date) params.set('ed', client.expiry_date);
+  if (client.name && client.name.trim()) params.set('n', client.name.trim());
+
+  // NOTE ON QR SCAN SPEED & PERMANENCE:
+  // We intentionally omit 300+ characters of keywords and full Google URLs from the QR query string!
+  // Keeping the URL compact (~60-80 chars) keeps the QR code matrix at Version 4/5 (33x33 or 37x37 modules),
+  // with large high-contrast modules that scan in <0.1s on EVERY phone camera (low-end and high-end).
+  // The /review page automatically retrieves the full keywords, Google review link, and business details
+  // seamlessly from the server upon scanning.
   return `${cleanBase}/review?${params.toString()}`;
 }
 
 export function buildClientStandeeUrl(baseUrl: string, client?: Partial<Client> | null): string {
-  if (!client) return `${baseUrl.replace(/\/$/, '')}/standee`;
-  const cleanBase = baseUrl.replace(/\/$/, '');
+  if (baseUrl === '') {
+    if (!client) return '/standee';
+    const params = new URLSearchParams();
+    if (client.id) params.set('id', client.id);
+    if (client.name && client.name.trim()) params.set('n', client.name.trim());
+    return `/standee?${params.toString()}`;
+  }
+
+  const cleanBase = getPublicBaseUrl(baseUrl);
+  if (!client) return `${cleanBase}/standee`;
+
   const params = new URLSearchParams();
   if (client.id) params.set('id', client.id);
-  if (client.name && client.name.trim()) params.set('name', client.name.trim());
-  if (client.phone && client.phone.trim()) params.set('phone', formatWhatsAppPhone(client.phone));
-  if (client.city && client.city.trim()) params.set('city', client.city.trim());
-  if (client.category) params.set('cat', client.category);
-  if (client.person_name && client.person_name.trim()) params.set('pn', client.person_name.trim());
-  if (client.default_lang) params.set('lang', client.default_lang);
-  if (client.google_url && client.google_url.trim()) params.set('g', client.google_url.trim());
-  if (client.keywords && client.keywords.trim()) params.set('k', client.keywords.trim());
-  if (client.start_date) params.set('sd', client.start_date);
-  if (client.expiry_date) params.set('ed', client.expiry_date);
+  if (client.name && client.name.trim()) params.set('n', client.name.trim());
   return `${cleanBase}/standee?${params.toString()}`;
 }
 

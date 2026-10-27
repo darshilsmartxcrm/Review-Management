@@ -17,6 +17,11 @@ const settingSchema = new mongoose.Schema(
       trim: true,
       default: 'SmartXCRM Review Hub',
     },
+    liveDomain: {
+      type: String,
+      trim: true,
+      default: '',
+    },
     supportEmail: {
       type: String,
       trim: true,

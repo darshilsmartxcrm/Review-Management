@@ -13,6 +13,7 @@ const getSettings = async (req, res, next) => {
       settings: {
         agencyPhone: settings.agencyPhone,
         agencyName: settings.agencyName,
+        liveDomain: settings.liveDomain || '',
         supportEmail: settings.supportEmail,
         reviewLockHours: settings.reviewLockHours,
         updatedAt: settings.updatedAt,
@@ -30,7 +31,7 @@ const getSettings = async (req, res, next) => {
  */
 const updateSettings = async (req, res, next) => {
   try {
-    const { agencyPhone, agencyName, supportEmail, reviewLockHours } = req.body;
+    const { agencyPhone, agencyName, liveDomain, supportEmail, reviewLockHours } = req.body;
 
     const settings = await Setting.getSingleton();
 
@@ -39,6 +40,9 @@ const updateSettings = async (req, res, next) => {
     }
     if (agencyName !== undefined) {
       settings.agencyName = String(agencyName).trim();
+    }
+    if (liveDomain !== undefined) {
+      settings.liveDomain = String(liveDomain).trim().replace(/\/+$/, '');
     }
     if (supportEmail !== undefined) {
       settings.supportEmail = String(supportEmail).trim();
@@ -55,6 +59,7 @@ const updateSettings = async (req, res, next) => {
       settings: {
         agencyPhone: settings.agencyPhone,
         agencyName: settings.agencyName,
+        liveDomain: settings.liveDomain || '',
         supportEmail: settings.supportEmail,
         reviewLockHours: settings.reviewLockHours,
         updatedAt: settings.updatedAt,

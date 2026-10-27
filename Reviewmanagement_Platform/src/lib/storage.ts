@@ -124,11 +124,25 @@ export async function markReviewUsed(clientId: string, reviewText: string): Prom
 
   if (typeof window === 'undefined') return;
   try {
-    await fetch(`${API_BASE_URL}/api/reviews`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ clientId, reviewText: reviewText.trim() }),
-    });
+    // 1. Try relative /api/reviews first (always works on mobile browsers on the web app)
+    let posted = false;
+    try {
+      const res = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientId, reviewText: reviewText.trim() }),
+      });
+      if (res.ok) posted = true;
+    } catch {}
+
+    // 2. Fallback to API_BASE_URL if non-local and relative failed
+    if (!posted && API_BASE_URL && !API_BASE_URL.includes('localhost') && !API_BASE_URL.includes('127.0.0.1')) {
+      await fetch(`${API_BASE_URL}/api/reviews`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientId, reviewText: reviewText.trim() }),
+      }).catch(() => {});
+    }
   } catch (e) {
     console.error('Failed to mark review as used on server:', e);
   }
@@ -139,8 +153,20 @@ export async function fetchServerUsedReviews(clientId: string): Promise<string[]
   if (typeof window === 'undefined' || !clientId) return local;
 
   try {
-    const res = await fetch(`${API_BASE_URL}/api/reviews?clientId=${encodeURIComponent(clientId)}`);
-    if (res.ok) {
+    let res: Response | null = null;
+    // 1. Try relative /api/reviews first
+    try {
+      res = await fetch(`/api/reviews?clientId=${encodeURIComponent(clientId)}`);
+    } catch {}
+
+    // 2. Fallback to API_BASE_URL if non-local and relative failed
+    if ((!res || !res.ok) && API_BASE_URL && !API_BASE_URL.includes('localhost') && !API_BASE_URL.includes('127.0.0.1')) {
+      try {
+        res = await fetch(`${API_BASE_URL}/api/reviews?clientId=${encodeURIComponent(clientId)}`);
+      } catch {}
+    }
+
+    if (res && res.ok) {
       const data = await res.json();
       if (data && data.success && Array.isArray(data.usedReviews)) {
         const now = Date.now();

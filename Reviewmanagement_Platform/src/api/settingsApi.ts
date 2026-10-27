@@ -3,6 +3,7 @@ import { apiClient } from './client';
 export interface SettingsPayload {
   agencyPhone?: string;
   agencyName?: string;
+  liveDomain?: string;
   supportEmail?: string;
   reviewLockHours?: number;
 }

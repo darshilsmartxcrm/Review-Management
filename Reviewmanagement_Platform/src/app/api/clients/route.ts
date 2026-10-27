@@ -71,6 +71,22 @@ export async function GET(request: Request) {
     if (client) {
       return NextResponse.json({ success: true, client });
     }
+
+    // Server-to-server fallback to Express backend
+    try {
+      const backendUrl = (process.env.BACKEND_API_URL || 'http://localhost:8000').replace(/\/+$/, '');
+      const backendRes = await fetch(`${backendUrl}/api/clients?id=${encodeURIComponent(id)}`, {
+        signal: AbortSignal.timeout(2500),
+      });
+      if (backendRes.ok) {
+        const backendData = await backendRes.json();
+        if (backendData && backendData.success && backendData.client) {
+          writeClientsToFile([backendData.client, ...all.filter((c: Client) => c.id !== id)]);
+          return NextResponse.json({ success: true, client: backendData.client });
+        }
+      }
+    } catch {}
+
     return NextResponse.json({ success: false, error: 'Client not found' }, { status: 404 });
   }
 

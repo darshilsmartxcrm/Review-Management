@@ -4,7 +4,17 @@
 
 const getApiBaseUrl = (): string => {
   if (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_API_URL) {
-    return process.env.NEXT_PUBLIC_API_URL.replace(/\/+$/, '');
+    const envUrl = process.env.NEXT_PUBLIC_API_URL.replace(/\/+$/, '');
+    if (typeof window !== 'undefined' && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
+      // If running on a live public domain but env variable pointed to localhost, use relative origin
+      if (envUrl.includes('localhost') || envUrl.includes('127.0.0.1')) {
+        return '';
+      }
+    }
+    return envUrl;
+  }
+  if (typeof window !== 'undefined' && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
+    return '';
   }
   return 'http://localhost:8000';
 };

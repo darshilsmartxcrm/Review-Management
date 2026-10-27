@@ -7,7 +7,8 @@ const settingsFilePath = path.join(process.cwd(), 'src', 'data', 'settings.json'
 const tmpSettingsPath = path.join(os.tmpdir(), 'review_hub_settings.json');
 
 const DEFAULT_SETTINGS = {
-  agencyPhone: '919876543210'
+  agencyPhone: '919876543210',
+  liveDomain: '',
 };
 
 let memorySettings = { ...DEFAULT_SETTINGS };
@@ -68,7 +69,8 @@ export async function POST(request: Request) {
       const current = readSettingsFromFile();
       const updated = {
         ...current,
-        agencyPhone: body.agencyPhone ? String(body.agencyPhone).trim() : current.agencyPhone
+        agencyPhone: body.agencyPhone ? String(body.agencyPhone).trim() : current.agencyPhone,
+        liveDomain: body.liveDomain !== undefined ? String(body.liveDomain).trim().replace(/\/+$/, '') : current.liveDomain,
       };
       writeSettingsToFile(updated);
       return NextResponse.json({ success: true, settings: updated });

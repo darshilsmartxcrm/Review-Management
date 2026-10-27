@@ -58,11 +58,27 @@ export default function QrCodeModal({ isOpen, client, onClose }: QrCodeModalProp
   };
 
   const handleDownload = () => {
-    if (!canvasRef.current) return;
-    const link = document.createElement('a');
-    link.download = `${client.name.replace(/\s+/g, '_')}_QR_Code.png`;
-    link.href = canvasRef.current.toDataURL('image/png');
-    link.click();
+    if (!client || !funnelUrl) return;
+    const offscreenCanvas = document.createElement('canvas');
+    QRCode.toCanvas(
+      offscreenCanvas,
+      funnelUrl,
+      {
+        width: 1024,
+        margin: 2,
+        color: {
+          dark: '#020617',
+          light: '#ffffff',
+        },
+        errorCorrectionLevel: 'M',
+      },
+      () => {
+        const link = document.createElement('a');
+        link.download = `${client.name.replace(/\s+/g, '_')}_UltraFast_QR.png`;
+        link.href = offscreenCanvas.toDataURL('image/png');
+        link.click();
+      }
+    );
   };
 
   return (
@@ -84,12 +100,17 @@ export default function QrCodeModal({ isOpen, client, onClose }: QrCodeModalProp
         <h3 className="text-xl font-bold text-white mb-0.5">
           {client.name}
         </h3>
-        <p className="text-xs text-slate-400 mb-4">
-          Scan with any phone camera to instantly open this client&apos;s review funnel.
+        <p className="text-xs text-slate-400 mb-3">
+          Scan with any mobile camera to instantly open this client&apos;s review funnel.
         </p>
 
+        {/* High-speed indicator */}
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-semibold mb-3">
+          <span>⚡ High-Speed Matrix (Instant scan on all phones)</span>
+        </div>
+
         {/* QR Code Container */}
-        <div className="inline-block p-4 rounded-3xl bg-white shadow-xl shadow-indigo-500/10 mb-3 border-4 border-slate-950">
+        <div className="block p-4 rounded-3xl bg-white shadow-xl shadow-indigo-500/10 mb-3 border-4 border-slate-950 max-w-[280px] mx-auto">
           <canvas ref={canvasRef} className="rounded-xl w-60 h-60 mx-auto" />
         </div>
 
@@ -120,18 +141,24 @@ export default function QrCodeModal({ isOpen, client, onClose }: QrCodeModalProp
           )}
         </div>
 
-        {/* Display Funnel URL */}
-        <div className="p-3 rounded-2xl bg-slate-950 border border-slate-800 text-left mb-4 flex items-center justify-between gap-2">
-          <div className="truncate text-xs font-mono text-slate-300 select-all">
-            {funnelUrl}
+        {/* Display Funnel URL with Public Indicator */}
+        <div className="text-left mb-4">
+          <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1 px-1">
+            <span className="text-slate-300 font-medium">🌐 Public Standee URL</span>
+            <span className="text-emerald-400 font-semibold">No Local / WiFi IP</span>
           </div>
-          <button
-            onClick={handleCopy}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition shrink-0"
-            title="Copy URL"
-          >
-            {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-          </button>
+          <div className="p-3 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-2">
+            <div className="truncate text-xs font-mono text-slate-300 select-all">
+              {funnelUrl}
+            </div>
+            <button
+              onClick={handleCopy}
+              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition shrink-0"
+              title="Copy URL"
+            >
+              {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+            </button>
+          </div>
         </div>
 
         {/* Actions */}
@@ -141,7 +168,7 @@ export default function QrCodeModal({ isOpen, client, onClose }: QrCodeModalProp
             className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 active:scale-95 text-white font-bold text-xs shadow-lg shadow-indigo-500/20 transition flex items-center justify-center gap-2"
           >
             <Download className="w-4 h-4" />
-            <span>Download High-Res QR (Print Ready)</span>
+            <span>Download High-Res 1024px QR (Print Ready)</span>
           </button>
 
           <div className="grid grid-cols-2 gap-2">
@@ -166,7 +193,7 @@ export default function QrCodeModal({ isOpen, client, onClose }: QrCodeModalProp
         </div>
 
         <p className="text-[11px] text-slate-400 mt-4 leading-relaxed">
-          🛡️ <strong>Permanent QR Code:</strong> Accessible between start & end dates. Updating details or dates will <strong>never change the printed QR code</strong>!
+          🛡️ <strong>Permanent QR Code:</strong> Scans fast on any mobile camera. Updating keywords, Google links, or plans in admin will <strong>never change the printed physical counter standee</strong>!
         </p>
 
       </div>

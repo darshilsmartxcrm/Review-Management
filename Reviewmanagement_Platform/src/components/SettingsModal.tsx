@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X, Lock, KeyRound, Download, Upload, RotateCcw, Check, Phone, MessageSquare } from 'lucide-react';
+import { X, Lock, KeyRound, Download, Upload, RotateCcw, Check, Phone, MessageSquare, Globe } from 'lucide-react';
 import { AdminCredentials, Client } from '../lib/types';
 import {
   getAdminCredentials,
@@ -39,18 +39,66 @@ export default function SettingsModal({
   const [agencyPhone, setAgencyPhone] = useState(getAgencyContactNumber());
   const [phoneSaved, setPhoneSaved] = useState(false);
 
+  // Public Live Domain for QR codes and standees
+  const [liveDomain, setLiveDomain] = useState<string>('');
+  const [domainSaved, setDomainSaved] = useState(false);
+
   useEffect(() => {
     if (isOpen) {
       setAgencyPhone(getAgencyContactNumber());
+      try {
+        const localDom = localStorage.getItem('rgh_live_domain_v1') || '';
+        if (localDom) setLiveDomain(localDom);
+      } catch {}
+
       settingsApi.fetchSettings().then((remote) => {
-        if (remote && remote.agencyPhone) {
-          setAgencyPhone(remote.agencyPhone);
+        if (remote) {
+          if (remote.agencyPhone) {
+            setAgencyPhone(remote.agencyPhone);
+          }
+          if (remote.liveDomain) {
+            setLiveDomain(remote.liveDomain);
+            try {
+              localStorage.setItem('rgh_live_domain_v1', remote.liveDomain);
+            } catch {}
+          }
         }
       }).catch(() => {});
     }
   }, [isOpen]);
 
   if (!isOpen) return null;
+
+  const handleSaveLiveDomain = async (e: React.FormEvent) => {
+    e.preventDefault();
+    let clean = liveDomain.trim().replace(/\/+$/, '');
+    if (clean && !clean.startsWith('http://') && !clean.startsWith('https://')) {
+      clean = `https://${clean}`;
+    }
+    const lower = clean.toLowerCase();
+    if (lower.includes('localhost') || lower.includes('127.0.0.1') || lower.includes('192.168.') || lower.includes('10.') || lower.includes('172.')) {
+      onShowToast('Please enter a public live website domain (e.g. https://reviewhub.smartxcrm.com), not a local or WiFi IP.', 'error');
+      return;
+    }
+
+    setLiveDomain(clean);
+    try {
+      localStorage.setItem('rgh_live_domain_v1', clean);
+    } catch {}
+
+    try {
+      await settingsApi.updateSettings({ liveDomain: clean });
+      await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ liveDomain: clean }),
+      }).catch(() => {});
+    } catch {}
+
+    setDomainSaved(true);
+    onShowToast(`Live Website Domain set to ${clean || 'Default'}! Standee QR codes updated.`, 'success');
+    setTimeout(() => setDomainSaved(false), 2500);
+  };
 
   const handleSaveAgencyPhone = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -157,6 +205,49 @@ export default function SettingsModal({
         <p className="text-xs text-slate-400 mb-6">
           Set agency support contact number, update admin credentials, and manage client data backups.
         </p>
+
+        {/* Public Live Website Domain Configuration */}
+        <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 mb-6 space-y-3">
+          <div className="flex items-center justify-between">
+            <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+              <Globe className="w-3.5 h-3.5 text-blue-400" />
+              <span>Public Live Domain (QR Codes & Standees)</span>
+            </h4>
+            <span className="text-[10px] font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2.5 py-0.5 rounded-full">
+              Production Link
+            </span>
+          </div>
+
+          <p className="text-[11px] text-slate-400 leading-relaxed">
+            All generated counter standees, client QR codes, and WhatsApp links will use this public domain. <strong>Strictly never exposes localhost or local WiFi IPs</strong>, ensuring instant scanning across all mobile phones on 4G/5G data.
+          </p>
+
+          <form onSubmit={handleSaveLiveDomain} className="space-y-3">
+            <div>
+              <label className="block text-[11px] font-medium text-slate-400 mb-1">
+                Live Website URL
+              </label>
+              <div className="relative">
+                <Globe className="absolute left-3.5 top-2.5 w-4 h-4 text-slate-500" />
+                <input
+                  type="text"
+                  value={liveDomain}
+                  onChange={(e) => setLiveDomain(e.target.value)}
+                  placeholder="e.g. https://reviewhub.smartxcrm.com"
+                  className="w-full pl-10 pr-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono transition"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:scale-95 text-white font-bold text-xs shadow-md shadow-blue-500/20 transition flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              {domainSaved ? <Check className="w-3.5 h-3.5 text-white" /> : <Globe className="w-3.5 h-3.5" />}
+              <span>{domainSaved ? 'Domain Saved!' : 'Save Live Domain'}</span>
+            </button>
+          </form>
+        </div>
 
         {/* Agency WhatsApp & Support Contact Number */}
         <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 mb-6 space-y-3">

@@ -134,8 +134,16 @@ function ReviewFunnelContent() {
     const storedClients = getStoredClients();
     let initialClient: Client = DEFAULT_CLIENTS[0];
 
-    // Priority 1: When nameParam is present (scanned from QR code or shared link)
-    if (nameParam) {
+    // Priority 1: Match by client ID from device storage or defaults immediately
+    const match = idParam ? (storedClients.find((c) => c.id === idParam) || DEFAULT_CLIENTS.find((c) => c.id === idParam)) : null;
+
+    if (match) {
+      initialClient = {
+        ...match,
+        name: nameParam ? nameParam.trim() : match.name,
+      };
+    } else if (nameParam) {
+      // Priority 2: When nameParam is present (scanned from QR code or shared link)
       initialClient = {
         id: idParam || `scanned_${Date.now()}`,
         name: nameParam.trim(),
@@ -150,10 +158,6 @@ function ReviewFunnelContent() {
         expiry_date: edParam || undefined,
         createdAt: new Date().toISOString(),
       };
-    } else if (idParam) {
-      // Priority 2: Match by client ID from device storage or defaults
-      const match = storedClients.find((c) => c.id === idParam) || DEFAULT_CLIENTS.find((c) => c.id === idParam);
-      if (match) initialClient = { ...match };
     } else if (dParam) {
       // Priority 3: Decoded legacy payload
       const decoded = decodeClientData(dParam);
@@ -169,7 +173,7 @@ function ReviewFunnelContent() {
       setLang(initialClient.default_lang);
     }
 
-    // Live sync with /api/clients for lock reviews and dates
+    // Live sync with /api/clients for keywords, google_url, locks, and dates
     const targetId = idParam || initialClient.id;
     if (targetId) {
       // Fetch 24-hour locked reviews for this client across all users & phones
@@ -179,45 +183,73 @@ function ReviewFunnelContent() {
         }
       });
 
-      fetch(`${API_BASE_URL}/api/clients?id=${encodeURIComponent(targetId)}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data && data.success && data.client) {
-            setClient((prev) => {
-              if (nameParam) {
-                return {
-                  ...data.client,
-                  name: nameParam.trim(),
-                  phone: phoneParam ? formatWhatsAppPhone(phoneParam) : prev.phone,
-                  city: cityParam ? cityParam.trim() : prev.city,
-                  category: (catParam as IndustryKey) || prev.category,
-                  person_name: pnParam ? pnParam.trim() : prev.person_name,
-                  keywords: kParam ? kParam.trim() : prev.keywords,
-                  google_url: gParam ? gParam.trim() : prev.google_url,
-                  start_date: sdParam || prev.start_date,
-                  expiry_date: edParam || prev.expiry_date,
-                  default_lang: (langParam as LanguageCode) || prev.default_lang,
-                };
-              }
-              return data.client;
-            });
-            if (data.client.default_lang && !langParam) {
-              setLang(data.client.default_lang);
-            }
+      const loadClient = async () => {
+        let fetchedData: any = null;
+        // 1. Try relative /api/clients first (works from any mobile phone scanning on the live web app)
+        try {
+          const res = await fetch(`/api/clients?id=${encodeURIComponent(targetId)}`);
+          if (res.ok) {
+            fetchedData = await res.json();
           }
-        })
-        .catch(() => {});
+        } catch {}
+
+        // 2. Fallback to API_BASE_URL if non-local and relative failed
+        if (!fetchedData || !fetchedData.success || !fetchedData.client) {
+          if (API_BASE_URL && !API_BASE_URL.includes('localhost') && !API_BASE_URL.includes('127.0.0.1')) {
+            try {
+              const res = await fetch(`${API_BASE_URL}/api/clients?id=${encodeURIComponent(targetId)}`);
+              if (res.ok) {
+                fetchedData = await res.json();
+              }
+            } catch {}
+          }
+        }
+
+        if (fetchedData && fetchedData.success && fetchedData.client) {
+          const remoteClient = fetchedData.client;
+          setClient((prev) => ({
+            ...remoteClient,
+            name: nameParam ? nameParam.trim() : (remoteClient.name || prev.name),
+            phone: phoneParam ? formatWhatsAppPhone(phoneParam) : (remoteClient.phone || prev.phone),
+            city: cityParam ? cityParam.trim() : (remoteClient.city || prev.city),
+            category: (catParam as IndustryKey) || (remoteClient.category || prev.category),
+            person_name: pnParam ? pnParam.trim() : (remoteClient.person_name || prev.person_name),
+            keywords: kParam ? kParam.trim() : (remoteClient.keywords || prev.keywords || ''),
+            google_url: gParam ? gParam.trim() : (remoteClient.google_url || prev.google_url),
+            start_date: sdParam || (remoteClient.start_date || prev.start_date),
+            expiry_date: edParam || (remoteClient.expiry_date || prev.expiry_date),
+            default_lang: (langParam as LanguageCode) || (remoteClient.default_lang || prev.default_lang),
+          }));
+
+          if (remoteClient.default_lang && !langParam) {
+            setLang(remoteClient.default_lang);
+          }
+        }
+      };
+
+      loadClient();
     }
 
     // Unconditionally fetch latest agency support contact number from /api/settings
-    fetch(`${API_BASE_URL}/api/settings`)
+    fetch(`/api/settings`)
       .then((res) => res.json())
       .then((data) => {
         if (data && data.success && data.settings && data.settings.agencyPhone) {
           setAgencyPhone(data.settings.agencyPhone);
         }
       })
-      .catch(() => {});
+      .catch(() => {
+        if (API_BASE_URL && !API_BASE_URL.includes('localhost') && !API_BASE_URL.includes('127.0.0.1')) {
+          fetch(`${API_BASE_URL}/api/settings`)
+            .then((res) => res.json())
+            .then((data) => {
+              if (data && data.success && data.settings && data.settings.agencyPhone) {
+                setAgencyPhone(data.settings.agencyPhone);
+              }
+            })
+            .catch(() => {});
+        }
+      });
   }, [searchParams]);
 
   const prevLangRef = useRef(lang);
@@ -233,7 +265,7 @@ function ReviewFunnelContent() {
       const templates = pickReviewTemplates(lang, client, selectedProduct, usedReviews);
       setActiveTemplates(templates);
     }
-  }, [client?.id, client?.name, client?.category, lang, rating, selectedProduct]);
+  }, [client?.id, client?.name, client?.category, client?.keywords, lang, rating, selectedProduct]);
 
   // Render generatedOptions whenever templates, selectedProduct, client, or lang changes
   // When user selects a product chip/point, the same templates stay steady and only the keyword updates (no unwanted shuffle!)
