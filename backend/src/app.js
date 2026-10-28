@@ -14,30 +14,10 @@ const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
-// CORS setup: allow requests from local Next.js frontend (ports 3000, 3001) and custom client origins
-const allowedOrigins = [
-  process.env.CLIENT_ORIGIN || 'http://localhost:3000',
-  'http://localhost:3000',
-  'http://localhost:3001',
-  'http://127.0.0.1:3000',
-  'http://127.0.0.1:3001',
-];
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // allow requests with no origin (like mobile apps, curl, Postman)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
-        return callback(null, true);
-      }
-      return callback(null, true); // Permissive in dev mode
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'],
-  })
-);
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 
 // Body parsers
 app.use(express.json({ limit: '10mb' }));
