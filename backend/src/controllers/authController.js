@@ -71,17 +71,6 @@ const login = async (req, res, next) => {
       });
     }
 
-    const mongoose = require('mongoose');
-    if (mongoose.connection.readyState !== 1) {
-      const connectDB = require('../config/db');
-      connectDB();
-      return res.status(503).json({
-        success: false,
-        error: 'Database connection is initializing or reconnecting. Please retry in a few seconds.',
-        code: 'DB_NOT_READY',
-      });
-    }
-
     const cleanUsername = username.trim().toLowerCase();
     const user = await User.findOne({ username: cleanUsername });
 
