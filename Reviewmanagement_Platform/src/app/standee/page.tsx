@@ -8,6 +8,7 @@ import { Printer, ArrowLeft, Star, Camera } from 'lucide-react';
 import { Client } from '../../lib/types';
 import {
   decodeClientData,
+  FALLBACK_CLIENT,
   DEFAULT_CLIENTS,
   buildClientReviewUrl,
   formatWhatsAppPhone,
@@ -32,6 +33,9 @@ function StandeeContent() {
     const idParam = searchParams.get('id');
     const dParam = searchParams.get('d');
 
+    const storedClients = getStoredClients();
+    const fallback = storedClients[0] || FALLBACK_CLIENT;
+
     if (nameParam) {
       return {
         id: idParam || `standee_${Date.now()}`,
@@ -40,7 +44,7 @@ function StandeeContent() {
         city: cityParam ? cityParam.trim() : '',
         category: (catParam as any) || 'healthcare',
         person_name: pnParam ? pnParam.trim() : undefined,
-        google_url: gParam ? gParam.trim() : DEFAULT_CLIENTS[0].google_url,
+        google_url: gParam ? gParam.trim() : fallback.google_url,
         default_lang: (langParam as any) || 'en',
         keywords: kParam ? kParam.trim() : '',
         start_date: sdParam || undefined,
@@ -53,10 +57,10 @@ function StandeeContent() {
       if (decoded && decoded.name) return decoded;
     }
     if (idParam) {
-      const match = DEFAULT_CLIENTS.find((c) => c.id === idParam);
+      const match = storedClients.find((c) => c.id === idParam);
       if (match) return match;
     }
-    return DEFAULT_CLIENTS[0];
+    return fallback;
   });
 
   useEffect(() => {
@@ -74,7 +78,8 @@ function StandeeContent() {
     const edParam = searchParams.get('ed') || searchParams.get('expiry_date');
 
     const storedClients = getStoredClients();
-    let initialClient = DEFAULT_CLIENTS[0];
+    const fallback = storedClients[0] || FALLBACK_CLIENT;
+    let initialClient = fallback;
 
     // 1. Direct query parameters (from admin share/test link or QR scan)
     if (nameParam) {
@@ -85,7 +90,7 @@ function StandeeContent() {
         city: cityParam ? cityParam.trim() : '',
         category: (catParam as any) || 'healthcare',
         person_name: pnParam ? pnParam.trim() : undefined,
-        google_url: gParam ? gParam.trim() : DEFAULT_CLIENTS[0].google_url,
+        google_url: gParam ? gParam.trim() : fallback.google_url,
         default_lang: (langParam as any) || 'en',
         keywords: kParam ? kParam.trim() : '',
         start_date: sdParam || undefined,
@@ -100,7 +105,7 @@ function StandeeContent() {
       }
     } else if (idParam) {
       // 3. If idParam is provided, check storedClients
-      const match = storedClients.find((c) => c.id === idParam) || DEFAULT_CLIENTS.find((c) => c.id === idParam);
+      const match = storedClients.find((c) => c.id === idParam);
       if (match) initialClient = match;
     } else if (storedClients.length > 0) {
       initialClient = storedClients[0];

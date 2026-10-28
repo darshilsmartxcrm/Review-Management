@@ -38,6 +38,15 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
+  // Mongoose buffering timed out or connection errors
+  if (err.name === 'MongooseError' && (err.message.includes('buffering timed out') || err.message.includes('bufferCommands'))) {
+    return res.status(503).json({
+      success: false,
+      error: 'Database connection is temporarily unavailable or reconnecting. Please retry in a few seconds.',
+      code: 'DB_CONNECTION_TIMEOUT',
+    });
+  }
+
   const statusCode = res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
   return res.status(statusCode).json({
     success: false,

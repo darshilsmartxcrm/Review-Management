@@ -5,7 +5,8 @@ import { API_BASE_URL, getAuthToken, setAuthToken, clearAuthToken } from '../api
 export { API_BASE_URL, getAuthToken, setAuthToken, clearAuthToken };
 
 // In-memory runtime cache (prevents writing sensitive/large business data to localStorage)
-let memoryClients: Client[] = [...DEFAULT_CLIENTS];
+// Initialized empty; real clients will be loaded dynamically from MongoDB database
+let memoryClients: Client[] = [];
 let memoryLeads: Lead[] = [];
 let memoryAgencyPhone = '919876543210';
 let memoryUsedReviews: { clientId: string; reviewText: string; timestamp: number }[] = [];

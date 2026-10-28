@@ -3,13 +3,12 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import { Client } from '../../../lib/types';
-import { DEFAULT_CLIENTS } from '../../../lib/data';
 
 const filePath = path.join(process.cwd(), 'src', 'data', 'clients.json');
 const tmpPath = path.join(os.tmpdir(), 'review_hub_clients.json');
 
-// In-memory fallback
-let memoryClients: Client[] = [...DEFAULT_CLIENTS];
+// In-memory runtime cache for real DB clients
+let memoryClients: Client[] = [];
 
 function readClientsFromFile(): Client[] {
   try {
@@ -25,17 +24,12 @@ function readClientsFromFile(): Client[] {
       const data = fs.readFileSync(filePath, 'utf-8');
       const parsed = JSON.parse(data);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        DEFAULT_CLIENTS.forEach((dc) => {
-          if (!parsed.some((c: Client) => c.id === dc.id)) {
-            parsed.push(dc);
-          }
-        });
         memoryClients = parsed;
         return parsed;
       }
     }
   } catch (err) {
-    console.error("Error reading clients.json:", err);
+    console.error('Error reading clients.json:', err);
   }
   return memoryClients;
 }
@@ -55,7 +49,7 @@ function writeClientsToFile(clients: Client[]): boolean {
       fs.writeFileSync(tmpPath, JSON.stringify(clients, null, 2), 'utf-8');
       return true;
     } catch (tmpErr) {
-      console.error("Error writing clients fallback:", tmpErr);
+      console.error('Error writing clients fallback:', tmpErr);
     }
     return false;
   }
@@ -64,43 +58,79 @@ function writeClientsToFile(clients: Client[]): boolean {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
-  const all = readClientsFromFile();
+  const backendUrl = (process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000').replace(/\/+$/, '');
 
+  // 1. Single client request
   if (id) {
-    const client = all.find((c) => c.id === id) || DEFAULT_CLIENTS.find((c) => c.id === id);
-    if (client) {
-      return NextResponse.json({ success: true, client });
-    }
-
-    // Server-to-server fallback to Express backend
+    // Try live MongoDB backend first
     try {
-      const backendUrl = (process.env.BACKEND_API_URL || 'http://localhost:8000').replace(/\/+$/, '');
       const backendRes = await fetch(`${backendUrl}/api/clients?id=${encodeURIComponent(id)}`, {
-        signal: AbortSignal.timeout(2500),
+        signal: AbortSignal.timeout(3000),
+        cache: 'no-store',
       });
       if (backendRes.ok) {
         const backendData = await backendRes.json();
         if (backendData && backendData.success && backendData.client) {
-          writeClientsToFile([backendData.client, ...all.filter((c: Client) => c.id !== id)]);
           return NextResponse.json({ success: true, client: backendData.client });
         }
       }
     } catch {}
 
+    // Fallback to local DB cache
+    const all = readClientsFromFile();
+    const client = all.find((c) => c.id === id);
+    if (client) {
+      return NextResponse.json({ success: true, client });
+    }
     return NextResponse.json({ success: false, error: 'Client not found' }, { status: 404 });
   }
 
-  return NextResponse.json({ success: true, clients: all });
+  // 2. All clients request - Fetch live from MongoDB backend
+  try {
+    const backendRes = await fetch(`${backendUrl}/api/clients`, {
+      signal: AbortSignal.timeout(3000),
+      cache: 'no-store',
+    });
+    if (backendRes.ok) {
+      const backendData = await backendRes.json();
+      if (backendData && backendData.success && Array.isArray(backendData.clients)) {
+        writeClientsToFile(backendData.clients);
+        return NextResponse.json({
+          success: true,
+          count: backendData.clients.length,
+          clients: backendData.clients,
+        });
+      }
+    }
+  } catch {}
+
+  // Fallback to local cache from DB
+  const all = readClientsFromFile();
+  return NextResponse.json({ success: true, count: all.length, clients: all });
 }
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    const backendUrl = (process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000').replace(/\/+$/, '');
+    const authHeader = request.headers.get('authorization');
+
+    // Forward to MongoDB Backend
+    try {
+      fetch(`${backendUrl}/api/clients`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(authHeader ? { Authorization: authHeader } : {}),
+        },
+        body: JSON.stringify(body),
+      }).catch(() => {});
+    } catch {}
+
     if (Array.isArray(body)) {
       writeClientsToFile(body);
       return NextResponse.json({ success: true, count: body.length });
     } else if (body && body.id) {
-      // update or insert single client
       const current = readClientsFromFile();
       const idx = current.findIndex((c) => c.id === body.id);
       let updated: Client[];
@@ -114,7 +144,7 @@ export async function POST(request: Request) {
     }
     return NextResponse.json({ success: false, error: 'Invalid payload' }, { status: 400 });
   } catch (err) {
-    console.error("API POST error:", err);
+    console.error('API POST error:', err);
     return NextResponse.json({ success: false, error: 'Internal error' }, { status: 500 });
   }
 }

@@ -1356,89 +1356,20 @@ export function getDefaultExpiryDate(monthsToAdd: number = 3): string {
   return `${y}-${m}-${day}`;
 }
 
-export const DEFAULT_CLIENTS: Client[] = [
-  {
-    id: 'client_1',
-    name: 'SmartXCRM Surgical & Hospital Equipment',
-    person_name: 'Mr. Darpan Patel (Director)',
-    category: 'surgical_medical',
-    city: 'Ahmedabad',
-    google_url: 'https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4',
-    phone: '919876543210',
-    keywords: 'Hospital Bed, Mobility Solutions, Oxygen Concentrator, Walker, Walker / Walking Stick',
-    default_lang: 'en',
-    createdAt: new Date().toISOString(),
-    start_date: '2026-10-01',
-    expiry_date: '2027-10-26'
-  },
-  {
-    id: 'client_2',
-    name: 'Lifeline Multi-Speciality Hospital & Trauma Care',
-    person_name: 'Dr. Keyur Patel (MS Orthopedic)',
-    category: 'healthcare',
-    city: 'Surat',
-    google_url: 'https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4',
-    phone: '919876543211',
-    keywords: 'Emergency Care, Orthopedic Surgery, ICU Facility, Cashless Mediclaim',
-    default_lang: 'en',
-    createdAt: new Date().toISOString(),
-    start_date: '2026-10-15',
-    expiry_date: '2027-04-26'
-  },
-  {
-    id: 'client_3',
-    name: 'Smile Craft Dental & Implant Clinic',
-    person_name: 'Dr. Sneha Sharma (BDS, Implantologist)',
-    category: 'healthcare',
-    city: 'Vadodara',
-    google_url: 'https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4',
-    phone: '919876543212',
-    keywords: 'Painless Root Canal, Teeth Cleaning, Dental Implants, Invisible Aligners',
-    default_lang: 'en',
-    createdAt: new Date().toISOString(),
-    start_date: '2026-10-20',
-    expiry_date: '2027-01-26'
-  },
-  {
-    id: 'client_4',
-    name: 'Royal Rajwadi Thali & Family Dining',
-    person_name: 'Chef Harshvardhan Singh',
-    category: 'restaurant',
-    city: 'Rajkot',
-    google_url: 'https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4',
-    phone: '919876543213',
-    keywords: 'Authentic Gujarati Thali, Family Dining, Fast Service, Delicious Desserts',
-    default_lang: 'en',
-    createdAt: new Date().toISOString(),
-    start_date: '2026-10-01',
-    expiry_date: '2027-06-26'
-  },
-  {
-    id: 'client_5',
-    name: 'Shivam Ayurvedic & Panchakarma Clinic',
-    person_name: 'Vaidya Hitesh Dave (BAMS)',
-    category: 'healthcare',
-    city: 'Ahmedabad',
-    google_url: 'https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4',
-    phone: '919876543214',
-    keywords: 'Panchakarma Therapy, Joint Pain Relief, Herbal Medicine, Stress Relief',
-    default_lang: 'en',
-    createdAt: new Date().toISOString(),
-    start_date: '2026-05-01',
-    expiry_date: '2026-09-15'
-  },
-  {
-    id: 'client_6',
-    name: 'Elite Fitness & Crossfit Studio',
-    person_name: 'Coach Vikram Rathod',
-    category: 'fitness',
-    city: 'Ahmedabad',
-    google_url: 'https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4',
-    phone: '919876543215',
-    keywords: 'Personal Training, Crossfit, Weight Loss, Modern Equipment',
-    default_lang: 'en',
-    createdAt: new Date().toISOString(),
-    start_date: '2026-12-01',
-    expiry_date: '2027-12-01'
-  }
-];
+export const FALLBACK_CLIENT: Client = {
+  id: '',
+  name: 'Review Management Hub',
+  person_name: '',
+  category: 'healthcare',
+  city: '',
+  google_url: '',
+  phone: '919876543210',
+  keywords: '',
+  default_lang: 'en',
+  createdAt: new Date().toISOString(),
+};
+
+// All client data is loaded dynamically from MongoDB Database.
+// No static demo clients are bundled.
+export const DEFAULT_CLIENTS: Client[] = [];
+

@@ -178,11 +178,21 @@ export default function SettingsModal({
     }
   };
 
-  const handleResetDefaults = () => {
-    if (confirm('Are you sure you want to reset all clients to default demo data? Your current custom clients will be overwritten.')) {
-      saveStoredClients(DEFAULT_CLIENTS);
-      onRefreshClients(DEFAULT_CLIENTS);
-      onShowToast('Reset to default sample clients.', 'success');
+  const handleResetDefaults = async () => {
+    if (confirm('Reload and sync all clients directly from the MongoDB database?')) {
+      try {
+        const res = await fetch('/api/clients');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.success && Array.isArray(data.clients)) {
+            saveStoredClients(data.clients);
+            onRefreshClients(data.clients);
+            onShowToast(`Synced ${data.clients.length} clients from database.`, 'success');
+            return;
+          }
+        }
+      } catch {}
+      onShowToast('Could not reload clients from database.', 'error');
     }
   };
 
@@ -392,10 +402,10 @@ export default function SettingsModal({
 
           <button
             onClick={handleResetDefaults}
-            className="w-full py-2 px-3 rounded-xl border border-rose-900/40 bg-rose-950/30 hover:bg-rose-950/60 text-xs font-semibold text-rose-300 transition flex items-center justify-center gap-1.5"
+            className="w-full py-2 px-3 rounded-xl border border-indigo-900/40 bg-indigo-950/30 hover:bg-indigo-950/60 text-xs font-semibold text-indigo-300 transition flex items-center justify-center gap-1.5"
           >
             <RotateCcw className="w-3.5 h-3.5" />
-            <span>Reset to Default Demo Clients</span>
+            <span>Sync / Reload Clients from Database</span>
           </button>
         </div>
 

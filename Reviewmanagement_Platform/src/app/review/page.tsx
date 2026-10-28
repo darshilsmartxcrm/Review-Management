@@ -30,6 +30,7 @@ import {
   formatGoogleReviewUrl,
   formatWhatsAppPhone,
   decodeClientData,
+  FALLBACK_CLIENT,
   DEFAULT_CLIENTS,
   isClientExpired,
   isClientUpcoming,
@@ -68,6 +69,9 @@ function ReviewFunnelContent() {
     const idParam = searchParams.get('id');
     const dParam = searchParams.get('d');
 
+    const storedClients = getStoredClients();
+    const fallback = storedClients[0] || FALLBACK_CLIENT;
+
     if (nameParam) {
       return {
         id: idParam || `scanned_${Date.now()}`,
@@ -76,7 +80,7 @@ function ReviewFunnelContent() {
         city: cityParam ? cityParam.trim() : '',
         category: (catParam as IndustryKey) || 'healthcare',
         person_name: pnParam ? pnParam.trim() : undefined,
-        google_url: gParam ? gParam.trim() : DEFAULT_CLIENTS[0].google_url,
+        google_url: gParam ? gParam.trim() : fallback.google_url,
         default_lang: (langParam as LanguageCode) || 'en',
         keywords: kParam ? kParam.trim() : '',
         start_date: sdParam || undefined,
@@ -89,10 +93,10 @@ function ReviewFunnelContent() {
       if (decoded && decoded.name) return decoded;
     }
     if (idParam) {
-      const match = DEFAULT_CLIENTS.find((c) => c.id === idParam);
+      const match = storedClients.find((c) => c.id === idParam);
       if (match) return match;
     }
-    return DEFAULT_CLIENTS[0];
+    return fallback;
   });
 
   const [lang, setLang] = useState<LanguageCode>(() => {
@@ -134,10 +138,11 @@ function ReviewFunnelContent() {
     const edParam = searchParams.get('ed') || searchParams.get('expiry_date');
 
     const storedClients = getStoredClients();
-    let initialClient: Client = DEFAULT_CLIENTS[0];
+    const fallback = storedClients[0] || FALLBACK_CLIENT;
+    let initialClient: Client = fallback;
 
-    // Priority 1: Match by client ID from device storage or defaults immediately
-    const match = idParam ? (storedClients.find((c) => c.id === idParam) || DEFAULT_CLIENTS.find((c) => c.id === idParam)) : null;
+    // Priority 1: Match by client ID from device storage or database
+    const match = idParam ? storedClients.find((c) => c.id === idParam) : null;
 
     if (match) {
       initialClient = {
@@ -153,7 +158,7 @@ function ReviewFunnelContent() {
         city: cityParam ? cityParam.trim() : '',
         category: (catParam as IndustryKey) || 'healthcare',
         person_name: pnParam ? pnParam.trim() : undefined,
-        google_url: gParam ? gParam.trim() : DEFAULT_CLIENTS[0].google_url,
+        google_url: gParam ? gParam.trim() : fallback.google_url,
         default_lang: (langParam as LanguageCode) || 'en',
         keywords: kParam ? kParam.trim() : '',
         start_date: sdParam || undefined,

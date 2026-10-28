@@ -27,6 +27,7 @@ export const fetchClients = createAsyncThunk(
     try {
       const remote = await clientsApi.fetchClients();
       if (Array.isArray(remote)) {
+        saveStoredClients(remote);
         return remote;
       }
       return getStoredClients();
