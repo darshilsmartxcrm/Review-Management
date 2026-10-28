@@ -67,7 +67,7 @@ const shutdown = async () => {
   console.log('🛑 Shutting down server gracefully...');
 
   try {
-    if (server) {
+    if (server && server.listening) {
       await new Promise((resolve, reject) => {
         server.close((err) => {
           if (err) return reject(err);
