@@ -7,6 +7,17 @@ const Client = require('../models/Client');
  */
 const getClients = async (req, res, next) => {
   try {
+    const mongoose = require('mongoose');
+    if (mongoose.connection.readyState !== 1) {
+      const connectDB = require('../config/db');
+      connectDB();
+      return res.status(503).json({
+        success: false,
+        error: 'Database connection is initializing or reconnecting. Please retry in a few seconds.',
+        code: 'DB_NOT_READY',
+      });
+    }
+
     const { id, category, search, status } = req.query;
 
     // Backward compatibility: If ?id=client_1 is passed (as in frontend /api/clients?id=...)

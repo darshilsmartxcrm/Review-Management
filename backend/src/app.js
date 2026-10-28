@@ -51,6 +51,7 @@ if (process.env.NODE_ENV !== 'production') {
 // Health Check Endpoint
 app.get(['/health', '/api/health'], (req, res) => {
   const mongoStatus = ['disconnected', 'connected', 'connecting', 'disconnecting'][mongoose.connection.readyState] || 'unknown';
+  const connectDB = require('./config/db');
   res.json({
     status: 'ok',
     uptime: process.uptime(),
@@ -58,6 +59,8 @@ app.get(['/health', '/api/health'], (req, res) => {
     database: {
       status: mongoStatus,
       name: mongoose.connection.name,
+      hasMongoUriEnv: Boolean(process.env.MONGO_URI || process.env.MONGODB_URI),
+      error: typeof connectDB.getLastError === 'function' ? connectDB.getLastError() : null,
     },
     service: 'Review Growth Hub & SmartXCRM Backend API',
   });
