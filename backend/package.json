@@ -4,9 +4,9 @@
   "description": "Node.js Express MongoDB Backend with JWT Auth for Review Growth Hub / SmartXCRM",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "build": "node -e \"console.log('Build step completed successfully.')\"",
-    "dev": "nodemon server.js",
+    "start": "node init && node server.js",
+    "build": "node init && node -e \"console.log('Build step completed successfully.')\"",
+    "dev": "node init && nodemon server.js",
     "seed": "node src/scripts/seed.js"
   },
   "dependencies": {
